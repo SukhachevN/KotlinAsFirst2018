@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER", "UNUSED_EXPRESSION")
+
 package lesson2.task1
 
 import lesson1.task1.discriminant
@@ -64,18 +65,23 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     val x = age
-    if (x%10 < 5 && x>21 && x-100>21) {
+    if (x % 10 < 5 && x > 21 && x < 100) {
         return "$x года"
     }
-    if (x%10==1 && (x!=11 && x!=111 ))   {
+    if (x % 10 < 5 && x > 121) {
+        return "$x года"
+    }
+
+    if (x % 10 == 1 && (x != 11 && x != 111)) {
         return "$x год"
     }
-    if (x<=20 && x>=5 || x%10 >= 5 && x>20 || (x<120 && x>105) ) {
+    if (x <= 20 && x >= 5 || x % 10 >= 5 && x > 20 || (x < 120 && x > 105)) {
         return "$x лет"
     }
 
-return "ошибка"
+    return "ошибка"
 }
+
 
 /**
  * Простая
@@ -87,23 +93,23 @@ return "ошибка"
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
-    val s1 = t1*v1
-    val s2 = t2*v2
-    val s3 = t3*v3
-    val halfS = (s1+s2+s3)/2
-    if (halfS<=s1) {
-     val time = halfS/v1
-        return time
+    val s1 = t1 * v1
+    val s2 = t2 * v2
+    val s3 = t3 * v3
+    val halfS = (s1 + s2 + s3) / 2
+    var time = 0.0
+    when {
+        halfS <= s1 -> {
+            time += halfS / v1
+        }
+        halfS <= s1 + s2 && halfS > s1 -> {
+            time += ((halfS - s1) / v2) + t1
+        }
+        halfS < s1 + s2 + s3 && halfS > s1 + s2 -> {
+            time += ((halfS - s1 - s2) / v3) + t1 + t2
+        }
     }
-    if (halfS<=s1+s2 && halfS>s1) {
-        val time = ((halfS-s1)/v2) +t1
-        return time
-    }
-    if (halfS<s1+s2+s3 && halfS>s1+s2) {
-        val time = ((halfS-s1-s2)/ v3 )+t1+t2
-        return time
-    }
-    return  1.0
+    return time
 }
 
 /**
@@ -118,16 +124,19 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    if ((kingX==rookX1 || kingY==rookY1) && !(kingX==rookX2 || kingY==rookY2)) {
-        return 1
+    var result = 0
+    when {
+        (kingX == rookX1 || kingY == rookY1) && !(kingX == rookX2 || kingY == rookY2) -> {
+            result += 1
+        }
+        (kingX == rookX2 || kingY == rookY2) && !(kingX == rookX1 || kingY == rookY1) -> {
+            result += 2
+        }
+        (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> {
+            result += 3
+        }
     }
-    if ((kingX==rookX2 || kingY==rookY2) && !(kingX==rookX1 || kingY==rookY1))  {
-        return 2
-    }
-    if ((kingX==rookX1 || kingY==rookY1) && (kingX==rookX2 || kingY==rookY2)) {
-        return 3
-    }
-    return 0
+    return result
 }
 
 /**
@@ -143,21 +152,28 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
+    var result = 0
+    var num = 0
 
-    for (i in -7..7) {
-        if ((kingX == rookX || kingY == rookY) && !((bishopX - i == kingX && bishopY - i == kingY) || (bishopX - i == kingX && bishopY + i == kingY))) {
-            return 1
-        }
-        if (((bishopX - i == kingX && bishopY - i == kingY) || (bishopX - i == kingX && bishopY + i == kingY)) && (kingX != rookX || kingY != rookY)) {
-            return 2
-        }
-        if (((bishopX - i == kingX && (bishopY - i == kingY) || (bishopX - i == kingX && bishopY + i == kingY)) && (kingX == rookX || kingY == rookY))) {
-            return 3
 
+    when {
+        (kingX == rookX || kingY == rookY) -> {
+            result += 1
         }
-
     }
-    return 0
+    for (i in -7..7) {
+        when {
+            ((bishopX - i == kingX && bishopY - i == kingY)
+                    || (bishopX - i == kingX && bishopY + i == kingY)) -> {
+                if (num == 0) {
+                    result += 2
+                    num += 1
+                }
+            }
+        }
+    }
+    return result
+
 }
 
 /**
@@ -179,28 +195,30 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (c>b) {
-        return -1
-    }
-    if (d<a) {
-        return -1
-    }
-    if (c<a && d>b) {
-        return b-a
-    }
-    if (c>a && d<b) {
-        return d-c
-    }
-    if (c>a && d>b) {
-        return b-c
-    }
-    if (d>b) {
-        return d-a
-    }
-    if (c<a && d<b) {
-        return d-a
+    var result = 0
+    when {
+        c > b -> {
+            result -= 1
+        }
+        d < a -> {
+            result -= 1
+        }
+        c < a && d > b -> {
+            result += b - a
+        }
+        c > a && d < b -> {
+            result += d - c
+        }
+        c > a && d > b && result != -1 -> {
+            result += b - c
+        }
+        c < a && d < b -> {
+            result += d - a
+        }
+        c == a && d == b && result!=-1-> {
+            result += b - a
+        }
 
     }
-
-return -1
+    return result
 }
