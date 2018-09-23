@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson2.task2
 
 import lesson1.task1.sqr
@@ -19,15 +20,10 @@ fun pointInsideCircle(x: Double, y: Double, x0: Double, y0: Double, r: Double) =
  * Определить, счастливое ли заданное число, вернуть true, если это так.
  */
 fun isNumberHappy(number: Int): Boolean {
-    val x1 = number/1000
-    val x2 = (number/100)%10
-    val x3 = (number/10)%10
-    val x4 = number%10
-    if (x1+x2==x3+x4) {
-        return true
-    }
-    return false
- }
+    val a = (number / 1000) + ((number / 100) % 10)
+    val b = (((number / 10) % 10) + number % 10)
+    return a == b
+}
 
 /**
  * Простая
@@ -37,13 +33,22 @@ fun isNumberHappy(number: Int): Boolean {
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
+    var result = 0
+    when {
+        (x1 == x2 || y1 == y2) -> {
+            result += 1
+        }
+    }
     for (i in -7..7) {
-    if ((x1==x2 || y1==y2 ) || (((x1==x2+i) && (y1==y2+i)) || (x1==x2+i && y1 == x2-i))) {
-                return true
+        when {
+            (x1 - i == x2 && y1 - i == y2)
+                    || (x1 - i == x2 && y1 + i == y2) -> {
+                result += 1
             }
+        }
 
     }
-    return false
+    return result == 1
 }
 
 /**
@@ -53,21 +58,25 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int {
-    if ( month==1 || month==3 || month==5 || month==7 || month==8 || month==10 || month==12) {
-        return 31
-    }
-    if (month==2) {
-        if ((year % 4) == 0) {
-            return 29
+    var result = 0
+    when {
+        month == 1 || month == 3 || month == 5 || month == 7
+                || month == 8 || month == 10 || month == 12 -> {
+            result += 31
         }
-        if ((year % 4)>0) {
-            return 28
+        month == 2 -> {
+            if ((year % 4 != 0 || year % 100 == 0) && year % 400 != 0) {
+                result += 28
+            } else {
+                result += 29
+            }
+        }
+        month == 4 || month == 6
+                || month == 9 || month == 11 -> {
+            result += 30
         }
     }
-    if ( month==4 || month==6 || month== 9 || month == 11) {
-        return 30
-    }
-    return 0
+    return result
 
 }
 
@@ -80,13 +89,7 @@ fun daysInMonth(month: Int, year: Int): Int {
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
                  x2: Double, y2: Double, r2: Double): Boolean {
-      if (r1<=r2) {
-            if (sqrt(sqr(x2-x1) + sqr(y2-y1))+r1<=r2)  {
-                return true
-            }
-          }
-
-    return false
+    return sqrt(sqr(x2 - x1) + sqr(y2 - y1)) + r1 <= r2
 
 }
 
@@ -100,37 +103,34 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    if (a >= r) {
-        if (b >= s) {
-            return true
+    var result = 0
 
-        }
-        if (c >= s) {
-            return true
-
-        }
-    } else {
-        if (a >= s) {
-            if (b >= r) {
-                return true
-
+    when {
+        a <= r -> {
+            if (b <= s || c <= s) {
+                result += 1
             }
-            if (c >= r) {
-                return true
-
+        }
+        a <= s -> {
+            if (b <= r || c <= r) {
+                result += 1
             }
+        }
+        b <= r -> {
+            if (c <= s) {
+                result += 1
+            }
+        }
+
+        b <= s -> {
+            if (c <= r) {
+                result += 1
+            }
+        }
+        result>1 -> {
+            result*=0
+            result+=1
         }
     }
-    if (b >= r) {
-        if (c >= s) {
-            return true
-        }
-    } else {
-        if (b >= s) {
-            if (c >= r) {
-                return true
-            }
-        }
-    }
-    return false
+    return result != 0
 }
