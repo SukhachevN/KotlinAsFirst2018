@@ -33,22 +33,21 @@ fun isNumberHappy(number: Int): Boolean {
  * Считать, что ферзи не могут загораживать друг друга.
  */
 fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
-    var result = 0
     when {
         (x1 == x2 || y1 == y2) -> {
-            result += 1
+            return true
         }
     }
     for (i in -7..7) {
         when {
             (x1 - i == x2 && y1 - i == y2)
                     || (x1 - i == x2 && y1 + i == y2) -> {
-                result += 1
+                return true
             }
         }
 
     }
-    return result == 1
+    return false
 }
 
 /**
@@ -58,25 +57,25 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  * Вернуть число дней в этом месяце этого года по григорианскому календарю.
  */
 fun daysInMonth(month: Int, year: Int): Int {
-    var result = 0
+
     when {
         month == 1 || month == 3 || month == 5 || month == 7
                 || month == 8 || month == 10 || month == 12 -> {
-            result += 31
+            return 31
         }
         month == 2 -> {
             if ((year % 4 != 0 || year % 100 == 0) && year % 400 != 0) {
-                result += 28
+                return 28
             } else {
-                result += 29
+                return 29
             }
         }
         month == 4 || month == 6
                 || month == 9 || month == 11 -> {
-            result += 30
+            return 30
         }
+        else -> return 0
     }
-    return result
 
 }
 
@@ -105,31 +104,26 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
     var result = 0
 
-    when {
-        a <= r -> {
-            if (b <= s || c <= s) {
-                result += 1
-            }
-        }
-        a <= s -> {
-            if (b <= r || c <= r) {
-                result += 1
-            }
-        }
-        b <= r -> {
-            if (c <= s) {
-                result += 1
-            }
-        }
 
-        b <= s -> {
-            if (c <= r) {
-                result += 1
-            }
+    if (a <= r) {
+        if (b <= s || c <= s) {
+            result += 1
         }
-        result>1 -> {
-            result*=0
-            result+=1
+    }
+    if (a <= s) {
+        if (b <= r || c <= r) {
+            result += 1
+        }
+    }
+    if (b <= r) {
+        if (c <= s) {
+            result += 1
+        }
+    }
+
+    if (b <= s) {
+        if (c <= r) {
+            result += 1
         }
     }
     return result != 0
