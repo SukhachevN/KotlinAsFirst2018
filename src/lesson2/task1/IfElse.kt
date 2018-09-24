@@ -65,17 +65,13 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  */
 fun ageDescription(age: Int): String {
     val x = age
-    if (x % 10 < 5 && x > 21 && x < 100) {
+    if (x % 10 < 5 && x > 21 && (x < 100 || x > 121) && x % 10 != 0) {
         return "$x года"
     }
-    if (x % 10 < 5 && x > 121) {
-        return "$x года"
-    }
-
     if (x % 10 == 1 && (x != 11 && x != 111)) {
         return "$x год"
     }
-    if (x <= 20 && x >= 5 || x % 10 >= 5 && x > 20 || (x < 120 && x > 105)) {
+    if (x <= 20 || x % 10 == 0 || x % 10 >= 5 && x > 20 || (x in 105..120)) {
         return "$x лет"
     }
 
@@ -97,19 +93,18 @@ fun timeForHalfWay(t1: Double, v1: Double,
     val s2 = t2 * v2
     val s3 = t3 * v3
     val halfS = (s1 + s2 + s3) / 2
-    var time = 0.0
     when {
         halfS <= s1 -> {
-            time += halfS / v1
+            return halfS / v1
         }
         halfS <= s1 + s2 && halfS > s1 -> {
-            time += ((halfS - s1) / v2) + t1
+            return ((halfS - s1) / v2) + t1
         }
         halfS < s1 + s2 + s3 && halfS > s1 + s2 -> {
-            time += ((halfS - s1 - s2) / v3) + t1 + t2
+            return ((halfS - s1 - s2) / v3) + t1 + t2
         }
+        else -> return 0.0
     }
-    return time
 }
 
 /**
@@ -124,19 +119,18 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    var result = 0
     when {
         (kingX == rookX1 || kingY == rookY1) && !(kingX == rookX2 || kingY == rookY2) -> {
-            result += 1
+            return 1
         }
         (kingX == rookX2 || kingY == rookY2) && !(kingX == rookX1 || kingY == rookY1) -> {
-            result += 2
+            return 2
         }
         (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> {
-            result += 3
+            return 3
         }
+        else -> return 0
     }
-    return result
 }
 
 /**
@@ -153,7 +147,7 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
     var result = 0
-    var num = 0
+    var num = false
 
 
     when {
@@ -165,9 +159,9 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
         when {
             ((bishopX - i == kingX && bishopY - i == kingY)
                     || (bishopX - i == kingX && bishopY + i == kingY)) -> {
-                if (num == 0) {
+                if (num == false) {
                     result += 2
-                    num += 1
+                    num = true
                 }
             }
         }
@@ -203,22 +197,18 @@ fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
         d < a -> {
             result -= 1
         }
-        c < a && d > b -> {
+        c <= a && d >= b -> {
             result += b - a
         }
-        c > a && d < b -> {
+        c >= a && d <= b -> {
             result += d - c
         }
-        c > a && d > b && result != -1 -> {
+        c >= a && d >= b && result != -1 -> {
             result += b - c
         }
-        c < a && d < b -> {
+        c <= a && d <= b -> {
             result += d - a
         }
-        c == a && d == b && result != -1 -> {
-            result += b - a
-        }
-
     }
     return result
 }
