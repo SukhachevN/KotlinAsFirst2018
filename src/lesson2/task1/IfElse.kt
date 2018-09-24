@@ -68,7 +68,7 @@ fun ageDescription(age: Int): String {
     if (x % 10 == 1 && (x != 11 && x != 111)) {
         return "$x год"
     }
-    if ((x % 10 < 5 && (x in 21..104 || x > 121) && x % 10 != 0) || x in 2..5) {
+    if ((x % 10 < 5 && (x in 21..104 || x > 121) && x % 10 != 0) || x in 2..4) {
         return "$x года"
     }
     if (x <= 20 || x % 10 == 0 || x % 10 >= 5 && x > 20 || (x in 105..120)) {
