@@ -88,12 +88,9 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double {
  */
 fun angleInRadian(grad: Int, min: Int, sec: Int): Double {
     val x1 = grad
-    grad.toDouble()
-    min.toDouble()
-    sec.toDouble()
-    val x2 = min / 60;
-    val x3 = sec / sqr(60);
-    return (x1 + x2 + x3) * (PI / 180)
+    val x2 = min.toDouble() / 60
+    val x3 = sec.toDouble() / sqr(60);
+    return (x1.toDouble() + x2 + x3) * (PI / 180)
 }
 
 /**
@@ -147,11 +144,9 @@ fun travelMinutes(hoursDepart: Int, minutesDepart: Int, hoursArrive: Int, minute
 fun accountInThreeYears(initial: Int, percent: Int): Double {
     val x = initial
     val y = percent
-    x.toDouble()
-    y.toDouble()
-    var s = x*1.0
+    var s = x.toDouble()
     for (i in 1..3) {
-        s += (s * y / 100)
+        s += (s * y.toDouble() / 100)
     }
     return s
 }
