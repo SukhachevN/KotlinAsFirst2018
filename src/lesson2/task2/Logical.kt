@@ -58,23 +58,16 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  */
 fun daysInMonth(month: Int, year: Int): Int {
 
-    when {
-        month == 1 || month == 3 || month == 5 || month == 7
-                || month == 8 || month == 10 || month == 12 -> {
-            return 31
-        }
-        month == 2 -> {
+    return when (month) {
+        1, 3, 5, 7, 8, 10, 12 -> 31
+        2 -> {
             if ((year % 4 != 0 || year % 100 == 0) && year % 400 != 0) {
-                return 28
+                28
             } else {
-                return 29
+                29
             }
         }
-        month == 4 || month == 6
-                || month == 9 || month == 11 -> {
-            return 30
-        }
-        else -> return 0
+        else -> 30
     }
 
 }
@@ -102,29 +95,11 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    var result = 0
-
-
-    if (a <= r) {
-        if (b <= s || c <= s) {
-            result += 1
-        }
+    return when {
+        (a <= r) && (b <= s || c <= s) -> true
+        (a <= s) && (b <= r || c <= r) -> true
+        (b <= r) && (c <= s) -> true
+        (b <= s) && (c <= r) -> true
+        else -> false
     }
-    if (a <= s) {
-        if (b <= r || c <= r) {
-            result += 1
-        }
-    }
-    if (b <= r) {
-        if (c <= s) {
-            result += 1
-        }
-    }
-
-    if (b <= s) {
-        if (c <= r) {
-            result += 1
-        }
-    }
-    return result != 0
 }
