@@ -63,18 +63,17 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * Мой возраст. Для заданного 0 < n < 200, рассматриваемого как возраст человека,
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
-fun ageDescription(age: Int): String {
-    if (age % 10 == 1 && (age != 11 && age != 111)) {
-        return "$age год"
-    } else {
-        if ((age % 10 < 5 && (age in 21..104 || age > 121) && age % 10 != 0) || age in 2..4) {
-            return "$age года"
+fun ageDescription(age: Int): String =
+        if (age % 10 == 1 && (age != 11 && age != 111)) {
+            "$age год"
         } else {
-            return "$age лет"
-        }
+            if ((age % 10 < 5 && (age in 21..104 || age > 121) && age % 10 != 0) || age in 2..4) {
+                "$age года"
+            } else {
+                "$age лет"
+            }
 
-    }
-}
+        }
 
 
 /**
@@ -110,14 +109,14 @@ fun timeForHalfWay(t1: Double, v1: Double,
  */
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
-                       rookX2: Int, rookY2: Int): Int {
-    return when {
-        (kingX == rookX1 || kingY == rookY1) && !(kingX == rookX2 || kingY == rookY2) -> 1
-        (kingX == rookX2 || kingY == rookY2) && !(kingX == rookX1 || kingY == rookY1) -> 2
-        (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> 3
-        else -> 0
-    }
-}
+                       rookX2: Int, rookY2: Int): Int =
+        when {
+            (kingX == rookX1 || kingY == rookY1) && !(kingX == rookX2 || kingY == rookY2) -> 1
+            (kingX == rookX2 || kingY == rookY2) && !(kingX == rookX1 || kingY == rookY1) -> 2
+            (kingX == rookX1 || kingY == rookY1) && (kingX == rookX2 || kingY == rookY2) -> 3
+            else -> 0
+        }
+
 
 /**
  * Простая
@@ -170,15 +169,15 @@ fun triangleKind(a: Double, b: Double, c: Double): Int = TODO()
  * Найти длину пересечения отрезков AB и CD.
  * Если пересечения нет, вернуть -1.
  */
-fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    return when {
-        c > b -> -1
-        d < a -> -1
-        c <= a && d >= b -> b - a
-        c >= a && d <= b -> d - c
-        c >= a && d >= b -> b - c
-        c <= a && d <= b -> d - a
-        else -> -1
-    }
+fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int =
+        when {
+            c > b -> -1
+            d < a -> -1
+            c <= a && d >= b -> b - a
+            c >= a && d <= b -> d - c
+            c >= a && d >= b -> b - c
+            c <= a && d <= b -> d - a
+            else -> -1
+        }
 
-}
+
