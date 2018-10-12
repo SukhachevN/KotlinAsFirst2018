@@ -75,7 +75,7 @@ fun digitNumber(n: Int): Int {
     do {
         count++
         num /= 10
-    } while (num > 0);
+    } while (abs(num) > 0);
     return count
 }
 
@@ -153,8 +153,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var divisor = 1
     do {
         divisor++
-    } while ((m % divisor > 0 && n % divisor > 0) || divisor <= m)
-    if (m % divisor == 0 && n % divisor == 0) {
+    } while ((m % divisor > 0 || n % divisor > 0) && divisor <= n)
+    if (m % divisor != 0 && n % divisor != 0) {
         return true
     } else {
         return false
@@ -311,7 +311,7 @@ fun isPalindrome(n: Int): Boolean {
         divisor *= 10
         number /= 10
         count++
-    } while (number / divisor > 0)
+    } while (number > 0)
     number += n
     divisor /= 10
     if (count > 1) {
@@ -323,11 +323,11 @@ fun isPalindrome(n: Int): Boolean {
             }
             number -= divisor * (number / divisor)
             number /= 10
-            divisor /= 10
+            divisor /= 100
 
 
         } while (divisor > 0)
-        if (count == 0 || count == 1) {
+        if (count == 0 || count == -1) {
             return true
         } else {
             return false
@@ -383,7 +383,7 @@ fun squareSequenceDigit(n: Int): Int {
     var k = 0
     var number = 0
     do {
-        x*=0
+        x *= 0
         x += sqr(k)
         if (x < 10) {
             count += 1
