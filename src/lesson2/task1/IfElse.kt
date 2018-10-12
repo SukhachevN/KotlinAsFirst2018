@@ -132,7 +132,6 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
     var result = 0
-    var num = false
     if (kingX == rookX || kingY == rookY) {
         result += 1
     }
@@ -140,10 +139,7 @@ fun rookOrBishopThreatens(kingX: Int, kingY: Int,
         when {
             ((bishopX - i == kingX && bishopY - i == kingY)
                     || (bishopX - i == kingX && bishopY + i == kingY)) -> {
-                if (num == false) {
-                    result += 2
-                    num = true
-                }
+                    return result + 2
             }
         }
     }
