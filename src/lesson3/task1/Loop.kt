@@ -346,26 +346,21 @@ fun isPalindrome(n: Int): Boolean {
  */
 fun hasDifferentDigits(n: Int): Boolean {
     var number = n
-    var sum = 0
-    val numeral = if (n % 10 != 0) n % 10 else n % 100
-    do {
-        if (n < 10) {
-            sum += n
-        }
-        sum += number % 10
+    var k: Int
+    val numeral = n % 10
+    if (n > 9) {
+        number-= numeral
         number /= 10
-    } while (number > 0)
-    if (numeral != 0) {
-        if (sum % numeral != 0) {
-            return true
-        } else {
-            return false
-        }
+        do {
+            k = number % 10
+            number-=k
+            number /= 10
+        } while (number > 0 && k==numeral)
+        return k != numeral
     } else {
         return false
     }
 }
-
 /**
  * Сложная
  *
