@@ -117,7 +117,7 @@ fun lcm(m: Int, n: Int): Int {
         do {
             divisor--
         } while (m % divisor != 0 || n % divisor != 0)
-         m * n / divisor
+        m * n / divisor
     }
 }
 
@@ -276,7 +276,7 @@ fun revert(n: Int): Int {
     var count = 0
     var div = 1
     var rnum = 0
-    if (n>9) {
+    if (n > 9) {
         do {
             div *= 10
             count++
@@ -292,8 +292,7 @@ fun revert(n: Int): Int {
 
         } while (div > 0 && count != 0)
         return rnum
-    }
-     else {
+    } else {
         return n
     }
 }
@@ -378,9 +377,9 @@ fun hasDifferentDigits(n: Int): Boolean {
  */
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
-    var x : Int
-    var k = 1
-    var number : Int
+    var x: Int
+    var k = 0
+    var number: Int
     do {
         x = sqr(k)
         if (x < 10) {
@@ -388,28 +387,25 @@ fun squareSequenceDigit(n: Int): Int {
             k++
         } else {
             do {
-                x/=10
                 count += 1
-            } while (x>10 && count < n)
+                x /= 10
+            } while (x >0 && count < n)
             k++
         }
     } while (count < n)
-    if (n>3) {
-        if (x == 0) {
-            return sqr(k)% 10
-        } else {
-            number = sqr(k)
-            do {
-                number /= 10
-            } while (number != x && number > 0)
-            return number%10
+    return if (n < 4) sqr(k) % 10
+    else {
+        number = sqr(k)
+        if (x != 0) sqr(k-1)%10
+        else {
+            do{
+                number-=number%10
+                number/=10
+            }while(number!=x && number>9)
+            number
         }
     }
-    else {
-        return sqr(k)%10
-    }
 }
-
 /**
  * Сложная
  *
@@ -428,13 +424,14 @@ fun fibSequenceDigit(n: Int): Int {
         x += fib(k)
         if (x < 10) {
             count += 1
+            k++
         } else {
             do {
                 count += 1
                 x /= 10
             } while (x / 10 > 0 || count < n)
+            k++
         }
-        k++
     } while (count < n)
     number += fib(k)
     if (count == n) {
