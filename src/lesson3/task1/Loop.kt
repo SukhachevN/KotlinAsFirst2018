@@ -110,17 +110,16 @@ fun fib(n: Int): Int {
  */
 fun lcm(m: Int, n: Int): Int {
     var k = max(m, n)
-    if ((m % n == 0) || (n % m == 0)) {
-        return k
-    } else {
+
+    return if ((m % n == 0) || (n % m == 0)) k
+    else {
         var divisor = k / 2 + 1
         do {
             divisor--
         } while (m % divisor != 0 || n % divisor != 0)
-        return m * n / divisor
+         m * n / divisor
     }
 }
-
 
 /**
  * Простая
@@ -177,7 +176,7 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
     var k = sqrt(n.toDouble()).toInt() - 1
     var result = 0
     if (m > 1) {
-            k++
+        k++
         if (sqr(k) >= m && sqr(k) <= n) {
             result += 1
         }
@@ -231,17 +230,17 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var sinx = x
+    var SinX = x
     var k = x
     var number = 1
-    var n = 1
+    var n = 1.0
     do {
         k *= x * x
         number += 2
-        sinx -= (k / factorial(number)) * n
-        n *= -1
-    } while (abs(k / factorial(number)) >= eps)
-    return sinx
+        SinX -= (k / factorial(number)) * n
+        n *= -1.0
+    } while (k / factorial(number) >= eps)
+    return SinX
 }
 
 /**
@@ -252,17 +251,17 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var cosx = 1.0
+    var CosX = 1.0
     var k = 1.0
     var number = 0
-    var n = 1
+    var n = -1
     do {
         k *= x * x
         number += 2
-        cosx += (k / factorial(number)) * n
+        CosX += (k / factorial(number)) * n
         n *= -1
-    } while (abs(k / factorial(number)) >= eps)
-    return cosx
+    } while (k / factorial(number) >= eps)
+    return CosX
 }
 
 /**
@@ -273,27 +272,28 @@ fun cos(x: Double, eps: Double): Double {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun revert(n: Int): Int {
-    var number = n
+    var num = n
     var count = 0
-    var divisor = 1
-    var revertnumber = 0
-    do {
-        divisor *= 10
-        count++
-        number /= 10
-    } while (number > 0)
-    if (count > 1) {
-        number += n
-        divisor /= 10
+    var div = 1
+    var rnum = 0
+    if (n>9) {
         do {
-            revertnumber += (number % 10) * divisor
-            divisor /= 10
-            number /= 10
+            div *= 10
+            count++
+            num /= 10
+        } while (num > 0)
+        num += n
+        div /= 10
+        do {
+            rnum += (num % 10) * div
+            div /= 10
+            num /= 10
             count--
 
-        } while (divisor > 0 && count != 0)
-        return revertnumber
-    } else {
+        } while (div > 0 && count != 0)
+        return rnum
+    }
+     else {
         return n
     }
 }
@@ -348,7 +348,7 @@ fun isPalindrome(n: Int): Boolean {
 fun hasDifferentDigits(n: Int): Boolean {
     var number = n
     var sum = 0
-    val numeral = n % 10
+    val numeral = if (n % 10 != 0) n % 10 else n % 100
     do {
         if (n < 10) {
             sum += n
@@ -378,33 +378,36 @@ fun hasDifferentDigits(n: Int): Boolean {
  */
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
-    var x = 0
-    var k = 0
-    var number = 0
+    var x : Int
+    var k = 1
+    var number : Int
     do {
-        x *= 0
-        x += sqr(k)
+        x = sqr(k)
         if (x < 10) {
             count += 1
+            k++
         } else {
             do {
+                x/=10
                 count += 1
-                x /= 10
-            } while (x > 0 || count < n)
+            } while (x>10 && count < n)
+            k++
         }
-        k++
     } while (count < n)
-    number += sqr(k)
-    if (count == n) {
-        return number % 10
-    } else {
-        do {
-            number /= 10
-        } while (number != x)
-        return number % 10
-
+    if (n>3) {
+        if (x == 0) {
+            return sqr(k)% 10
+        } else {
+            number = sqr(k)
+            do {
+                number /= 10
+            } while (number != x && number > 0)
+            return number%10
+        }
     }
-
+    else {
+        return sqr(k)%10
+    }
 }
 
 /**
