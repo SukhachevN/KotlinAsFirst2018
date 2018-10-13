@@ -177,12 +177,10 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
     var k = sqrt(n.toDouble()).toInt() - 1
     var result = 0
     if (m > 1) {
-        do {
             k++
-            if (sqr(k) >= m && sqr(k) <= n) {
-                result += 1
-            }
-        } while (sqr(k) <= n)
+        if (sqr(k) >= m && sqr(k) <= n) {
+            result += 1
+        }
     } else {
         return true
     }
@@ -317,23 +315,18 @@ fun isPalindrome(n: Int): Boolean {
         divisor *= 10
         number /= 10
         count++
-    } while (number > 0)
-    number += n
-    divisor /= 10
+    } while (number > 10)
+    number = n
     if (count > 1) {
         do {
-
             if (number / divisor == number % 10) {
                 count -= 2
-
             }
             number -= divisor * (number / divisor)
             number /= 10
             divisor /= 100
-
-
         } while (divisor > 0)
-        if (count == 0 || count == -1) {
+        if (count <= 0) {
             return true
         } else {
             return false
