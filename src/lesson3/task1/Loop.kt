@@ -4,6 +4,7 @@ package lesson3.task1
 
 import lesson1.task1.sqr
 import kotlin.math.abs
+import kotlin.math.max
 import kotlin.math.sqrt
 
 /**
@@ -87,11 +88,19 @@ fun digitNumber(n: Int): Int {
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
 fun fib(n: Int): Int {
+    var result = 0
+    var k1 = 1
+    var k2 = 1
     if (n <= 2) {
         return 1
-    } else return fib(n - 2) + fib(n - 1)
+    }
+    for (i in 3..n) {
+        result = k1 + k2
+        k1 = k2
+        k2 = result
+    }
+    return result
 }
-
 
 /**
  * Простая
@@ -100,15 +109,15 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var k = if (m >= n) m else n
+    var k = max(m, n)
     if ((m % n == 0) || (n % m == 0)) {
         return k
     } else {
+        var divisor = k / 2 + 1
         do {
-            k++
-        } while (k % m != 0 || k % n != 0)
-        return k
-
+            divisor--
+        } while (m % divisor != 0 || n % divisor != 0)
+        return m * n / divisor
     }
 }
 
@@ -122,8 +131,8 @@ fun minDivisor(n: Int): Int {
     var divisor = 1
     do {
         divisor++
-    } while (n % divisor != 0)
-    return divisor
+    } while (n % divisor != 0 && divisor <= n / 2)
+    return if (n % divisor == 0) divisor else n
 }
 
 
@@ -133,14 +142,13 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var divisor = n
+    var divisor = n / 2 + 1
     do {
         divisor--
-    } while (n % divisor != 0 && divisor > 0)
-    return divisor
-
-
+    } while (n % divisor != 0)
+    return if (divisor >= 1) divisor else n
 }
+
 
 /**
  * Простая
@@ -153,14 +161,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var divisor = 1
     do {
         divisor++
-    } while ((m % divisor > 0 || n % divisor > 0) && divisor <= n)
-    if (m % divisor != 0 && n % divisor != 0) {
-        return true
-    } else {
-        return false
-    }
-
-
+    } while ((m % divisor > 0 || n % divisor > 0) && divisor <= max(m, n) / 2 + 1)
+    return (m % divisor != 0 && n % divisor != 0)
 }
 
 
@@ -172,15 +174,19 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var k = 0
+    var k = sqrt(n.toDouble()).toInt() - 1
     var result = 0
-    do {
-        k++
-        if (sqr(k) >= m && sqr(k) <= n) {
-            result += 1
-        }
-    } while (sqr(k) <= n)
-    return result > 0
+    if (m > 1) {
+        do {
+            k++
+            if (sqr(k) >= m && sqr(k) <= n) {
+                result += 1
+            }
+        } while (sqr(k) <= n)
+    } else {
+        return true
+    }
+    return result != 0
 }
 
 
