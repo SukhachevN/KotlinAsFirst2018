@@ -309,21 +309,31 @@ fun revert(n: Int): Int {
 fun isPalindrome(n: Int): Boolean {
     var number = n
     var divisor = 1
-    var count = 0
+    var count = 1
     do {
         divisor *= 10
         number /= 10
         count++
-    } while (number > 10)
+    } while (number >= 10)
     number = n
+    println(count)
     if (count > 1) {
         do {
             if (number / divisor == number % 10) {
                 count -= 2
             }
-            number -= divisor * (number / divisor)
-            number /= 10
-            divisor /= 100
+            if ((number / (divisor / 10)) % 10 != 0) {
+                number -= divisor * (number / divisor)
+                number /= 10
+                divisor /= 100
+            } else {
+                if (((number - number % 10) / 10) % 10 == 0) {
+                    number -= divisor * (number / divisor)
+                    number /= 100
+                    divisor /= 10000
+                    count -= 2
+                }
+            }
         } while (divisor > 0)
         if (count <= 0) {
             return true
@@ -349,18 +359,19 @@ fun hasDifferentDigits(n: Int): Boolean {
     var k: Int
     val numeral = n % 10
     if (n > 9) {
-        number-= numeral
+        number -= numeral
         number /= 10
         do {
             k = number % 10
-            number-=k
+            number -= k
             number /= 10
-        } while (number > 0 && k==numeral)
+        } while (number > 0 && k == numeral)
         return k != numeral
     } else {
         return false
     }
 }
+
 /**
  * Сложная
  *
@@ -384,23 +395,24 @@ fun squareSequenceDigit(n: Int): Int {
             do {
                 count += 1
                 x /= 10
-            } while (x >0 && count < n)
+            } while (x > 0 && count < n)
             k++
         }
     } while (count < n)
     return if (n < 4) sqr(k) % 10
     else {
         number = sqr(k)
-        if (x != 0) sqr(k-1)%10
+        if (x != 0) sqr(k - 1) % 10
         else {
-            do{
-                number-=number%10
-                number/=10
-            }while(number!=x && number>9)
+            do {
+                number -= number % 10
+                number /= 10
+            } while (number != x && number > 9)
             number
         }
     }
 }
+
 /**
  * Сложная
  *
