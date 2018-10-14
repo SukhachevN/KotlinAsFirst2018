@@ -399,7 +399,7 @@ fun squareSequenceDigit(n: Int): Int {
             k++
         }
     } while (count < n)
-    return if (n < 4) sqr(k) % 10
+    return if (n < 4) sqr(k)
     else {
         number = sqr(k)
         if (x != 0) sqr(k - 1) % 10
@@ -424,11 +424,11 @@ fun squareSequenceDigit(n: Int): Int {
  */
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
-    var k = 1
-    var x = 0
-    var number = 0
+    var k = 0
+    var x: Int
+    var number: Int
     do {
-        x += fib(k)
+        x = fib(k)
         if (x < 10) {
             count += 1
             k++
@@ -436,19 +436,20 @@ fun fibSequenceDigit(n: Int): Int {
             do {
                 count += 1
                 x /= 10
-            } while (x / 10 > 0 || count < n)
+            } while (x > 0 && count < n)
             k++
         }
     } while (count < n)
-    number += fib(k)
-    if (count == n) {
-        return number % 10
-    } else {
-        do {
-            number /= 10
-        } while (number != x)
-        return x % 10
-
+    number = fib(k)
+    return if (n < 7) fib(k)
+    else {
+         if (x != 0) fib(k-1) % 10
+        else {
+            do {
+                number -= number % 10
+                number /= 10
+            } while (number != x && number > 9)
+            number
+        }
     }
 }
-
