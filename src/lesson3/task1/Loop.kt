@@ -443,7 +443,7 @@ fun fibSequenceDigit(n: Int): Int {
     number = fib(k)
     return if (n < 7) fib(k)
     else {
-         if (x != 0) fib(k-1) % 10
+        if (x != 0) fib(k - 1) % 10
         else {
             do {
                 number -= number % 10
