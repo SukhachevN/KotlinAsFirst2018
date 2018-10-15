@@ -316,11 +316,12 @@ fun isPalindrome(n: Int): Boolean {
         count++
     } while (number >= 10)
     number = n
-    println(count)
     if (count > 1) {
         do {
             if (number / divisor == number % 10) {
                 count -= 2
+            } else {
+                return false
             }
             if ((number / (divisor / 10)) % 10 != 0) {
                 number -= divisor * (number / divisor)
@@ -384,7 +385,7 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
     var x: Int
-    var k = 0
+    var k = 1
     var number: Int
     do {
         x = sqr(k)
@@ -399,16 +400,16 @@ fun squareSequenceDigit(n: Int): Int {
             k++
         }
     } while (count < n)
-    return if (n < 4) sqr(k)
+    return if (n < 4) sqr(k-1)
     else {
-        number = sqr(k)
-        if (x != 0) sqr(k - 1) % 10
+        number = sqr(k-1)
+        if (x == 0) sqr(k-1) % 10
         else {
             do {
                 number -= number % 10
                 number /= 10
-            } while (number != x && number > 9)
-            number
+            } while (number != x && number > 10)
+            number % 10
         }
     }
 }
