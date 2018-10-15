@@ -320,6 +320,9 @@ fun isPalindrome(n: Int): Boolean {
     number = n
     if (count != 1) {
         do {
+            if (count==1) {
+                return true
+            }
             if (count == 3) {
                 if (number / 100 == number % 10) {
                     return true
