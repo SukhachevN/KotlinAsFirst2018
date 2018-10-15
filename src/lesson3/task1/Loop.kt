@@ -318,25 +318,31 @@ fun isPalindrome(n: Int): Boolean {
     number = n
     if (count > 1) {
         do {
-            if (number / divisor == number % 10) {
-                count -= 2
+            if (count == 3) {
+                if (number / 100 == number % 10) {
+                    return true
+                }
             } else {
-                return false
-            }
-            if ((number / (divisor / 10)) % 10 != 0) {
-                number -= divisor * (number / divisor)
-                number /= 10
-                divisor /= 100
-            } else {
-                if (((number - number % 10) / 10) % 10 == 0) {
-                    number -= divisor * (number / divisor)
-                    number /= 100
-                    divisor /= 10000
+                if (number / divisor == number % 10) {
                     count -= 2
+                } else {
+                    return false
+                }
+                if ((number / (divisor / 10)) % 10 != 0) {
+                    number -= divisor * (number / divisor)
+                    number /= 10
+                    divisor /= 100
+                } else {
+                    if (((number - number % 10) / 10) % 10 == 0) {
+                        number -= divisor * (number / divisor)
+                        number /= 100
+                        divisor /= 10000
+                        count -= 2
+                    }
                 }
             }
         } while (divisor > 0)
-        if (count <= 0) {
+        if (count <= 1) {
             return true
         } else {
             return false
@@ -400,10 +406,10 @@ fun squareSequenceDigit(n: Int): Int {
             k++
         }
     } while (count < n)
-    return if (n < 4) sqr(k-1)
+    return if (n < 4) sqr(k - 1)
     else {
-        number = sqr(k-1)
-        if (x == 0) sqr(k-1) % 10
+        number = sqr(k - 1)
+        if (x == 0) sqr(k - 1) % 10
         else {
             do {
                 number -= number % 10
