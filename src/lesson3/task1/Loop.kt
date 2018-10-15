@@ -310,13 +310,15 @@ fun isPalindrome(n: Int): Boolean {
     var number = n
     var divisor = 1
     var count = 1
-    do {
-        divisor *= 10
-        number /= 10
-        count++
-    } while (number >= 10)
+    if (n>=10){
+        do {
+            divisor *= 10
+            number /= 10
+            count++
+        } while (number >= 10)
+    }
     number = n
-    if (count > 1) {
+    if (count != 1) {
         do {
             if (count == 3) {
                 if (number / 100 == number % 10) {
