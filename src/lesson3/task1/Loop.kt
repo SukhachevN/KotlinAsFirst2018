@@ -3,6 +3,7 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
+import kotlin.math.PI
 import kotlin.math.abs
 import kotlin.math.max
 import kotlin.math.sqrt
@@ -230,14 +231,18 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var SinX = x
-    var k = x
+    var SinX = if ((x / (PI / 2)) % 2.0 == 0.0) x % PI else x
+    var k = SinX
     var number = 1
     var n = 1.0
     do {
-        k *= x * x
+        if ((x / (PI / 2)) % 2.0 == 0.0) {
+            k *= (x % PI) * (x % PI)
+        } else {
+            k *= x * x
+        }
         number += 2
-        SinX -= (k / factorial(number)) * n
+        SinX -= k / factorial(number) * n
         n *= -1.0
     } while (k / factorial(number) >= eps)
     return SinX
@@ -254,12 +259,16 @@ fun cos(x: Double, eps: Double): Double {
     var CosX = 1.0
     var k = 1.0
     var number = 0
-    var n = -1
+    var n = -1.0
     do {
-        k *= x * x
+        if ((x / (PI)) % 2.0 == 0.0) {
+            k *= (x % PI / 2.0) * (x % PI / 2.0)
+        } else {
+            k *= x * x
+        }
         number += 2
         CosX += (k / factorial(number)) * n
-        n *= -1
+        n *= -1.0
     } while (k / factorial(number) >= eps)
     return CosX
 }
@@ -310,7 +319,7 @@ fun isPalindrome(n: Int): Boolean {
     var number = n
     var divisor = 1
     var count = 1
-    if (n>=10){
+    if (n >= 10) {
         do {
             divisor *= 10
             number /= 10
@@ -320,7 +329,7 @@ fun isPalindrome(n: Int): Boolean {
     number = n
     if (count != 1) {
         do {
-            if (count==1) {
+            if (count == 1) {
                 return true
             }
             if (count == 3) {
