@@ -403,14 +403,14 @@ fun decimalFromString(str: String, base: Int): Int {
             for (i in 2..count)
                 base1 *= base
         }
-        if (str[k] in 'a'..'z'){
-            number += (alphabet.indexOf(str[k], 0)+10)*base1
+        if (str[k] in 'a'..'z') {
+            number += (alphabet.indexOf(str[k], 0) + 10) * base1
             k++
             count--
             base1 *= 0
             base1 += 1
         }
-        if( str[k] in '0'..'9') {
+        if (str[k] in '0'..'9') {
             number += str[k].toInt() * base1
             k++
             count--
@@ -430,7 +430,104 @@ fun decimalFromString(str: String, base: Int): Int {
  * 90 = XC, 100 = C, 400 = CD, 500 = D, 900 = CM, 1000 = M.
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
-fun roman(n: Int): String = TODO()
+fun roman(n: Int): String {
+    var result: String = ""
+    var num = n
+    var count = 0
+    if (n > 999) {
+        count += 1000
+    }
+    if (n > 99 && count == 0) {
+        count += 100
+    }
+    if (n > 9 && count == 0) {
+        count += 10
+    }
+    if (n <= 9 && count == 0) {
+        count += 1
+    }
+    do {
+        if (num < 10) {
+            when {
+                num < 4 -> {
+                    for (i in 1..num) {
+                        result += "I"
+                    }
+                }
+                num == 4 -> {
+                    result += "IV"
+                }
+                num == 5 -> {
+                    result += "V"
+                }
+
+                num in 6..8 -> {
+                    result += "V"
+                    for (i in 1..(num - 5)) {
+                        result += "I"
+                    }
+                }
+                num == 9 -> {
+                    result += "IX"
+                }
+            }
+        }
+        if (num / 10 < 10 && num in 10..99) {
+            when {
+                num / 10 in 1..3 -> {
+                    for (i in 1..(num / 10)) {
+                        result += "X"
+                    }
+                }
+                num / 10 == 4 -> {
+                    result += "XL"
+                }
+                num / 10 == 5 -> {
+                    result += "L"
+                }
+                num / 10 in 6..8 -> {
+                    result += "L"
+                    for (i in 1..((num / 10) - 5))
+                        result += "X"
+                }
+                num / 10 == 9 -> {
+                    result += "XC"
+                }
+            }
+        }
+        if (num / 100 < 10 && num in 100..999) {
+            when {
+                num / 100 in 1..3 -> {
+                    result += "C"
+                }
+                num / 100 == 4 -> {
+                    result += "CD"
+                }
+                num / 100 == 5 -> {
+                    result += "D"
+                }
+                num / 100 in 6..8 -> {
+                    result += "D"
+                    for (i in 1..((num / 100) - 5)) {
+                        result += "C"
+                    }
+                }
+                num / 100 == 9 -> {
+                    result += "CM"
+                }
+            }
+        }
+        if (num / 1000 < 10 && num >= 1000) {
+            for (i in 1..(num / 1000)) {
+                result += "M"
+            }
+        }
+        num -= (num / count) * count
+        count /= 10
+        print(num)
+    } while (num > 0)
+    return result
+}
 
 /**
  * Очень сложная
