@@ -231,12 +231,12 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var SinX = if ((x / (PI / 2)) % 2.0 == 0.0) x % PI else x
+    var SinX = if ((x / (PI)) % 2.0 == 0.0) x % PI else x
     var k = SinX
     var number = 1
     var n = 1.0
     do {
-        if ((x / (PI / 2)) % 2.0 == 0.0) {
+        if ((x / (PI)) % 2.0 == 0.0) {
             k *= (x % PI) * (x % PI)
         } else {
             k *= x * x
@@ -262,7 +262,7 @@ fun cos(x: Double, eps: Double): Double {
     var n = -1.0
     do {
         if ((x / (PI)) % 2.0 == 0.0) {
-            k *= (x % PI / 2.0) * (x % PI / 2.0)
+            k *= (x % PI ) * (x % PI )
         } else {
             k *= x * x
         }
