@@ -318,7 +318,7 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    var string: String = ""
+    var string = ""
     var number = n
     var number2 = 0
     var count = 0
@@ -498,7 +498,8 @@ fun roman(n: Int): String {
         if (num / 100 < 10 && num in 100..999) {
             when {
                 num / 100 in 1..3 -> {
-                    result += "C"
+                    for (i in 1..(num / 100))
+                        result += "C"
                 }
                 num / 100 == 4 -> {
                     result += "CD"
@@ -524,7 +525,6 @@ fun roman(n: Int): String {
         }
         num -= (num / count) * count
         count /= 10
-        print(num)
     } while (num > 0)
     return result
 }
