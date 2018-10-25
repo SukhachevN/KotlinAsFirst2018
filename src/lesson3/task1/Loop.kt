@@ -107,14 +107,13 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    val k = min(m, n)
-    return if ((m % n == 0) || (n % m == 0)) k
+    return if ((m % n == 0) || (n % m == 0)) max/**/(m, n)
     else {
-        var divisor = k / 2 + 1
+        var divisor = max(m, n) / 2
         do {
             divisor--
         } while (m % divisor != 0 || n % divisor != 0)
-        m * n / divisor
+        (m * n) / divisor
     }
 }
 
@@ -158,7 +157,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     do {
         divisor++
     } while ((m % divisor != 0 || n % divisor != 0) && divisor <= min(m, n))
-    return (m % divisor != 0 && n % divisor != 0)
+    return if(min(m,n)!=1) (m % divisor != 0 && n % divisor != 0) else true
 }
 
 
@@ -277,9 +276,8 @@ fun revert(n: Int): Int {
             div *= 10
             count++
             num /= 10
-        } while (num > 0)
-        num += n
-        div /= 10
+        } while (num > 9)
+        num = n
         do {
             rnum += (num % 10) * div
             div /= 10
@@ -312,15 +310,13 @@ fun isPalindrome(n: Int): Boolean {
             div *= 10
             count++
             num /= 10
-        } while (num > 0)
-        num += n
-        div /= 10
+        } while (num > 9)
+        num = n
         do {
             rnum += (num % 10) * div
             div /= 10
             num /= 10
             count--
-
         } while (div > 0)
     }
     return if (n > 9) n == rnum else true
