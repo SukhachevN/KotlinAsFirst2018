@@ -3,10 +3,7 @@
 package lesson3.task1
 
 import lesson1.task1.sqr
-import kotlin.math.PI
-import kotlin.math.abs
-import kotlin.math.max
-import kotlin.math.sqrt
+import kotlin.math.*
 
 /**
  * Пример
@@ -110,8 +107,7 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int {
-    var k = max(m, n)
-
+    val k = min(m, n)
     return if ((m % n == 0) || (n % m == 0)) k
     else {
         var divisor = k / 2 + 1
@@ -146,7 +142,7 @@ fun maxDivisor(n: Int): Int {
     do {
         divisor--
     } while (n % divisor != 0)
-    return if (divisor >= 1) divisor else n
+    return divisor
 }
 
 
@@ -161,7 +157,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var divisor = 1
     do {
         divisor++
-    } while ((m % divisor > 0 || n % divisor > 0) && divisor <= max(m, n) / 2 + 1)
+    } while ((m % divisor != 0 || n % divisor != 0) && divisor <= min(m, n))
     return (m % divisor != 0 && n % divisor != 0)
 }
 
@@ -174,17 +170,12 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var k = sqrt(n.toDouble()).toInt() - 1
-    var result = 0
-    if (m > 1) {
-        k++
-        if (sqr(k) >= m && sqr(k) <= n) {
-            result += 1
-        }
-    } else {
+    var k = floor(sqrt(n.toDouble()) - 1)
+    k++
+    if (sqr(k) >= m && sqr(k) <= n) {
         return true
     }
-    return result != 0
+    return false
 }
 
 
@@ -231,21 +222,21 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var SinX = if ((x / (PI)) % 2.0 == 0.0) x % PI else x
-    var k = SinX
+    var sinX = x % (2 * PI)
+    println(sinX)
+    var k = x % (2 * PI)
     var number = 1
     var n = 1.0
-    do {
-        if ((x / (PI)) % 2.0 == 0.0) {
-            k *= (x % PI) * (x % PI)
-        } else {
-            k *= x * x
-        }
-        number += 2
-        SinX -= k / factorial(number) * n
-        n *= -1.0
-    } while (k / factorial(number) >= eps)
-    return SinX
+    if (abs(k / factorial(number)) > eps) {
+        do {
+            k *= (x % (2 * PI)) * (x % (2 * PI))
+            number += 2
+            sinX -= (k / factorial(number) * n)
+            n *= -1.0
+            println(sinX)
+        } while (abs(k / factorial(number)) > eps)
+    }
+    return sinX
 }
 
 /**
@@ -261,15 +252,11 @@ fun cos(x: Double, eps: Double): Double {
     var number = 0
     var n = -1.0
     do {
-        if ((x / (PI)) % 2.0 == 0.0) {
-            k *= (x % PI ) * (x % PI )
-        } else {
-            k *= x * x
-        }
+        k *= (x % (2 * PI)) * (x % (2 * PI))
         number += 2
         CosX += (k / factorial(number)) * n
         n *= -1.0
-    } while (k / factorial(number) >= eps)
+    } while (k / factorial(number) > eps)
     return CosX
 }
 
@@ -299,7 +286,7 @@ fun revert(n: Int): Int {
             num /= 10
             count--
 
-        } while (div > 0 && count != 0)
+        } while (div > 0)
         return rnum
     } else {
         return n
@@ -316,55 +303,27 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean {
-    var number = n
-    var divisor = 1
-    var count = 1
-    if (n >= 10) {
+    var num = n
+    var count = 0
+    var div = 1
+    var rnum = 0
+    if (n > 9) {
         do {
-            divisor *= 10
-            number /= 10
+            div *= 10
             count++
-        } while (number >= 10)
-    }
-    number = n
-    if (count != 1) {
+            num /= 10
+        } while (num > 0)
+        num += n
+        div /= 10
         do {
-            if (count == 1) {
-                return true
-            }
-            if (count == 3) {
-                if (number / 100 == number % 10) {
-                    return true
-                }
-            } else {
-                if (number / divisor == number % 10) {
-                    count -= 2
-                } else {
-                    return false
-                }
-                if ((number / (divisor / 10)) % 10 != 0) {
-                    number -= divisor * (number / divisor)
-                    number /= 10
-                    divisor /= 100
-                } else {
-                    if (((number - number % 10) / 10) % 10 == 0) {
-                        number -= divisor * (number / divisor)
-                        number /= 100
-                        divisor /= 10000
-                        count -= 2
-                    }
-                }
-            }
-        } while (divisor > 0)
-        if (count <= 1) {
-            return true
-        } else {
-            return false
-        }
-    } else {
-        return true
+            rnum += (num % 10) * div
+            div /= 10
+            num /= 10
+            count--
 
+        } while (div > 0)
     }
+    return if (n > 9) n == rnum else true
 }
 
 /**
@@ -380,11 +339,9 @@ fun hasDifferentDigits(n: Int): Boolean {
     var k: Int
     val numeral = n % 10
     if (n > 9) {
-        number -= numeral
         number /= 10
         do {
             k = number % 10
-            number -= k
             number /= 10
         } while (number > 0 && k == numeral)
         return k != numeral
@@ -404,34 +361,24 @@ fun hasDifferentDigits(n: Int): Boolean {
  */
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
-    var x: Int
-    var k = 1
+    var k = 0
     var number: Int
+
     do {
-        x = sqr(k)
-        if (x < 10) {
-            count += 1
-            k++
-        } else {
-            do {
-                count += 1
-                x /= 10
-            } while (x > 0 && count < n)
-            k++
-        }
+        k++
+        var count1 = 0
+        var x = sqr(k)
+        do {
+            count1++
+            x /= 10
+        } while (x > 0)
+        count += count1
     } while (count < n)
-    return if (n < 4) sqr(k - 1)
-    else {
-        number = sqr(k - 1)
-        if (x == 0) sqr(k - 1) % 10
-        else {
-            do {
-                number -= number % 10
-                number /= 10
-            } while (number != x && number > 10)
-            number % 10
-        }
+    number = sqr(k)
+    for (i in 1..count - n) {
+        number /= 10
     }
+    return number % 10
 }
 
 /**
@@ -446,31 +393,20 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
     var k = 0
-    var x: Int
     var number: Int
     do {
-        x = fib(k)
-        if (x < 10) {
-            count += 1
-            k++
-        } else {
-            do {
-                count += 1
-                x /= 10
-            } while (x > 0 && count < n)
-            k++
-        }
+        k++
+        var count1 = 0
+        var x = fib(k)
+        do {
+            count1++
+            x /= 10
+        } while (x > 0)
+        count += count1
     } while (count < n)
     number = fib(k)
-    return if (n < 7) fib(k)
-    else {
-        if (x != 0) fib(k - 1) % 10
-        else {
-            do {
-                number -= number % 10
-                number /= 10
-            } while (number != x && number > 9)
-            number
-        }
+    for (i in 1..count - n) {
+        number /= 10
     }
+    return number % 10
 }
