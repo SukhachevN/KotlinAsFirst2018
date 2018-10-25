@@ -397,21 +397,23 @@ fun decimalFromString(str: String, base: Int): Int {
     var count = str.length
     var base1 = 1
     var k = 0
-    val alphabet = "abcdefghijklmnopqrstuvwxyz"
+    val alphabet: String = "abcdefghijklmnopqrstuvwxyz"
+    val numbers = "0123456789"
     do {
         if (count > 1) {
             for (i in 2..count)
                 base1 *= base
         }
-        if (str[k] in 'a'..'z') {
-            number += (alphabet.indexOf(str[k], 0) + 10) * base1
+        if (str[k] in alphabet) {
+            number += ((alphabet.indexOf(str[k], 0)) + 10) * base1
             k++
             count--
             base1 *= 0
             base1 += 1
         }
-        if (str[k] in '0'..'9') {
-            number += str[k].toInt() * base1
+        if (str[k] in numbers) {
+            print(str[k])
+            number += (numbers.indexOf(str[k], 0)) * base1
             k++
             count--
             base1 *= 0
