@@ -259,21 +259,29 @@ fun factorizeToString(n: Int): String {
     var k = 2
     var x = n
     var string: String = ""
-    do {
-        if (isPrime(k) == true) {
-            if (x % k == 0) {
-                var result = "$k*"
-                string += result
-                x /= k
+    if (isPrime(x) != true) {
+        do {
+            if (isPrime(k) == true) {
+                if (x % k == 0) {
+                    var result = "$k*"
+                    string += result
+                    x /= k
+                }
+                if (x % k != 0) {
+                    k++
+                    x = n
+                }
+            } else {
+                do {
+                    k++
+                } while (isPrime(k) != true)
+
             }
-            if (x % k != 0) {
-                k++
-                x *= 0
-                x += n
-            }
-        } else k++
-    } while (k <= n)
-    return string.substring(0, string.length - 1)
+        } while (k <= n)
+        return string.substring(0, string.length - 1)
+    } else {
+        return n.toString()
+    }
 }
 
 /**
@@ -320,7 +328,7 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     var string = ""
     var number = n
-    var number2 : Int
+    var number2: Int
     var count = 0
     var base1 = 1
     val alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -445,6 +453,7 @@ fun roman(n: Int): String {
         count += 1
     }
     do {
+        println(count)
         if (num < 10) {
             when {
                 num < 4 -> {
@@ -522,7 +531,7 @@ fun roman(n: Int): String {
             }
         }
         num -= (num / count) * count
-        if (num > count / 10) {
+        if (num >= count / 10) {
             count /= 10
         } else {
             count /= 100
