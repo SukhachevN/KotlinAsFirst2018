@@ -320,7 +320,7 @@ fun convert(n: Int, base: Int): List<Int> {
 fun convertToString(n: Int, base: Int): String {
     var string = ""
     var number = n
-    var number2 = 0
+    var number2 : Int
     var count = 0
     var base1 = 1
     val alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -332,20 +332,16 @@ fun convertToString(n: Int, base: Int): String {
     do {
         if (number / base1 < 10) {
             string += number / base1
-            number2 += number % base1
-            number *= 0
-            number += number2
-            number2 *= 0
+            number2 = number % base1
+            number = number2
             if (base1 > 1) {
                 base1 /= base
             }
             count--
         } else {
             string += alphabet[(number / base1) - 10]
-            number2 += number % base1
-            number *= 0
-            number += number2
-            number2 *= 0
+            number2 = number % base1
+            number = number2
             if (base1 > 1) {
                 base1 /= base
             }
@@ -397,7 +393,7 @@ fun decimalFromString(str: String, base: Int): Int {
     var count = str.length
     var base1 = 1
     var k = 0
-    val alphabet: String = "abcdefghijklmnopqrstuvwxyz"
+    val alphabet = "abcdefghijklmnopqrstuvwxyz"
     val numbers = "0123456789"
     do {
         if (count > 1) {
@@ -405,14 +401,14 @@ fun decimalFromString(str: String, base: Int): Int {
                 base1 *= base
         }
         if (str[k] in alphabet) {
-            number += ((alphabet.indexOf(str[k], 0)) + 10) * base1
+            var x = str[k].toLowerCase()
+            number += ((alphabet.indexOf(x, 0)) + 10) * base1
             k++
             count--
             base1 *= 0
             base1 += 1
         }
         if (str[k] in numbers) {
-            print(str[k])
             number += (numbers.indexOf(str[k], 0)) * base1
             k++
             count--
@@ -526,7 +522,11 @@ fun roman(n: Int): String {
             }
         }
         num -= (num / count) * count
-        count /= 10
+        if (num > count / 10) {
+            count /= 10
+        } else {
+            count /= 100
+        }
     } while (num > 0)
     return result
 }
