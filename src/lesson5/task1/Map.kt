@@ -251,8 +251,8 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((key, value) in friends) {
         var a = value.toMutableSet()
         for (element in a) {
-            if (element in result != true ) {
-                result.put(element , setOf())
+            if (element in result != true) {
+                result.put(element, setOf())
             }
         }
         for ((x, y) in friends) {
@@ -261,16 +261,10 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
                     a.add(x)
                     result[key] = a
                 }
-                for (element in a) {
-                    if (x in value != true && x in element == true && element in value == true) {
-                        a.add(x)
-                        result[key] = a
-                    }
-                }
             }
         }
     }
-return result
+    return result
 }
 
 /**
