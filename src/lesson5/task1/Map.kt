@@ -251,17 +251,24 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
     for ((key, value) in friends) {
         var a = value.toMutableSet()
         for (element in a) {
-            if (element in result != true) {
+            if (element !in result) {
                 result.put(element, setOf())
             }
         }
-        for ((x, y) in friends) {
-            if (x != key) {
-                if (key in y == true && x in value != true) {
-                    a.add(x)
-                    result[key] = a
+        for ((k,v) in result) {
+            if (k != key) {
+                for (element in a) {
+                    for (x in v) {
+                        if (x !in value && x != key)
+                            a.add(x)
+                    }
+                    if (k !in value && k in element) {
+                        a.add(k)
+                    }
                 }
+                result[key]=a.toSortedSet()
             }
+
         }
     }
     return result
