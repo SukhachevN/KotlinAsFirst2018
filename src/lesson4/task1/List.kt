@@ -236,7 +236,6 @@ fun factorize(n: Int): List<Int> {
                 result.add(k)
                 x /= k
             }
-
             if (x % k != 0) {
                 k++
                 x *= 0
@@ -294,7 +293,7 @@ fun factorizeToString(n: Int): String {
 fun convert(n: Int, base: Int): List<Int> {
     val result = mutableListOf<Int>()
     var number = n
-    var number2 = 0
+    var number2 : Int
     var count = 0
     var base1 = 1
     do {
@@ -304,10 +303,8 @@ fun convert(n: Int, base: Int): List<Int> {
     base1 /= base
     do {
         result.add(number / base1)
-        number2 += number % base1
-        number *= 0
-        number += number2
-        number2 *= 0
+        number2 = number % base1
+        number = number2
         if (base1 > 1) {
             base1 /= base
         }
@@ -401,7 +398,8 @@ fun decimalFromString(str: String, base: Int): Int {
     var count = str.length
     var base1 = 1
     var k = 0
-    val alphabet = "abcdefghijklmnopqrstuvwxyz"
+    val alphabet = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
     val numbers = "0123456789"
     do {
         if (count > 1) {
@@ -410,18 +408,20 @@ fun decimalFromString(str: String, base: Int): Int {
         }
         if (str[k] in alphabet) {
             var x = str[k].toLowerCase()
-            number += ((alphabet.indexOf(x, 0)) + 10) * base1
+            println(alphabet.indexOf(x))
+            number += (alphabet.indexOf(x) + 10) * base1
             k++
             count--
             base1 *= 0
             base1 += 1
-        }
-        if (str[k] in numbers) {
-            number += (numbers.indexOf(str[k], 0)) * base1
-            k++
-            count--
-            base1 *= 0
-            base1 += 1
+        } else {
+            if (str[k] in numbers) {
+                number += (numbers.indexOf(str[k], 0)) * base1
+                k++
+                count--
+                base1 *= 0
+                base1 += 1
+            }
         }
     } while (count > 0)
     return number
