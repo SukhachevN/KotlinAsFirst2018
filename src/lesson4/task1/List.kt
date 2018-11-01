@@ -132,16 +132,10 @@ fun abs(v: List<Double>): Double {
  * Рассчитать среднее арифметическое элементов списка list. Вернуть 0.0, если список пуст
  */
 fun mean(list: List<Double>): Double {
-    var count = 0.0
-    var sum = 0.0
-    for (element in list) {
-        count++
-        sum += element
-    }
-    if (count > 0) {
-        return sum / count
+    return if (list.isNotEmpty()) {
+        list.sum() / list.size
     } else {
-        return 0.0
+        0.0
     }
 }
 
@@ -154,9 +148,9 @@ fun mean(list: List<Double>): Double {
  * Обратите внимание, что данная функция должна изменять содержание списка list, а не его копии.
  */
 fun center(list: MutableList<Double>): MutableList<Double> {
-    var x = mean(list)
+    val x = mean(list)
     for (i in 0 until list.size) {
-        var element = list[i] - x
+        val element = list[i] - x
         list[i] = element
     }
     return list
@@ -187,10 +181,10 @@ fun times(a: List<Double>, b: List<Double>): Double {
  */
 fun polynom(p: List<Double>, x: Double): Double {
     var result = 0.0
-    var xdegree = 1.0
+    var xDegree = 1.0
     for (element in p) {
-        result += element * xdegree
-        xdegree *= x
+        result += element * xDegree
+        xDegree *= x
     }
     return result
 }
@@ -208,13 +202,9 @@ fun polynom(p: List<Double>, x: Double): Double {
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
     var sum = 0.0
     for (i in 0 until list.size) {
-        if (i != 0) {
-            var element = list[i] + sum
-            sum += list[i]
-            list[i] = element
-        } else {
-            sum += list[0]
-        }
+        val element = list[i] + sum
+        sum += list[i]
+        list[i] = element
     }
     return list
 }
@@ -231,18 +221,11 @@ fun factorize(n: Int): List<Int> {
     var x = n
     val result = mutableListOf<Int>()
     do {
-        if (isPrime(k) == true) {
-            if (x % k == 0) {
-                result.add(k)
-                x /= k
-            }
-            if (x % k != 0) {
-                k++
-                x *= 0
-                x += n
-            }
+        if (x % k == 0) {
+            result.add(k)
+            x /= k
         } else k++
-    } while (k <= n)
+    } while (k <= n / 2)
     return result
 
 }
@@ -255,31 +238,15 @@ fun factorize(n: Int): List<Int> {
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
 fun factorizeToString(n: Int): String {
-    var k = 2
-    var x = n
-    var string: String = ""
-    if (isPrime(x) != true) {
-        do {
-            if (isPrime(k) == true) {
-                if (x % k == 0) {
-                    var result = "$k*"
-                    string += result
-                    x /= k
-                }
-                if (x % k != 0) {
-                    k++
-                    x = n
-                }
-            } else {
-                do {
-                    k++
-                } while (isPrime(k) != true)
-
-            }
-        } while (k <= n)
-        return string.substring(0, string.length - 1)
+    var string = ""
+    val list = factorize(n)
+    return if (list.size > 1) {
+        for (element in list) {
+            string += "$element*"
+        }
+        string.substring(0, string.length - 1)
     } else {
-        return n.toString()
+        n.toString()
     }
 }
 
@@ -293,21 +260,17 @@ fun factorizeToString(n: Int): String {
 fun convert(n: Int, base: Int): List<Int> {
     val result = mutableListOf<Int>()
     var number = n
-    var number2 : Int
     var count = 0
     var base1 = 1
     do {
         base1 *= base
         count++
-    } while (base1 < number)
+    } while (base1 <= number)
     base1 /= base
     do {
         result.add(number / base1)
-        number2 = number % base1
-        number = number2
-        if (base1 > 1) {
-            base1 /= base
-        }
+        number %= base1
+        base1 /= base
         count--
 
     } while (count > 0)
@@ -324,36 +287,16 @@ fun convert(n: Int, base: Int): List<Int> {
  */
 fun convertToString(n: Int, base: Int): String {
     var string = ""
-    var number = n
-    var number2: Int
-    var count = 0
-    var base1 = 1
-    val alphabet = "abcdefghijklmnopqrstuvwxyz"
-    do {
-        base1 *= base
-        count++
-    } while (base1 < number)
-    base1 /= base
-    do {
-        if (number / base1 < 10) {
-            string += number / base1
-            number2 = number % base1
-            number = number2
-            if (base1 > 1) {
-                base1 /= base
-            }
-            count--
+    val list = convert(n, base)
+    for (element in list) {
+        if (element <= 9) {
+            string += "$element"
         } else {
-            string += alphabet[(number / base1) - 10]
-            number2 = number % base1
-            number = number2
-            if (base1 > 1) {
-                base1 /= base
-            }
-            count--
-        }
+            val x = (element + 87).toChar()
+            string += x.toString()
 
-    } while (count > 0)
+        }
+    }
     return string
 }
 
@@ -369,17 +312,14 @@ fun decimal(digits: List<Int>, base: Int): Int {
     var number = 0
     var base1 = 1
     var k = 0
+    for (i in 2..count) {
+        base1 *= base
+    }
     do {
-        if (count > 1) {
-            for (i in 2..count) {
-                base1 *= base
-            }
-        }
         number += digits[k] * base1
         k++
         count--
-        base1 *= 0
-        base1 += 1
+        base1 /= base
     } while (count > 0)
     return number
 }
@@ -394,37 +334,15 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    var number = 0
-    var count = str.length
-    var base1 = 1
-    var k = 0
-    val alphabet = listOf('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-            'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
-    val numbers = "0123456789"
-    do {
-        if (count > 1) {
-            for (i in 2..count)
-                base1 *= base
-        }
-        if (str[k] in alphabet) {
-            var x = str[k].toLowerCase()
-            println(alphabet.indexOf(x))
-            number += (alphabet.indexOf(x) + 10) * base1
-            k++
-            count--
-            base1 *= 0
-            base1 += 1
+    val digits = mutableListOf<Int>()
+    for (element in str) {
+        if (element.toInt() >= 97) {
+            digits.add(element.toInt() - 87)
         } else {
-            if (str[k] in numbers) {
-                number += (numbers.indexOf(str[k], 0)) * base1
-                k++
-                count--
-                base1 *= 0
-                base1 += 1
-            }
+            digits.add(element.toInt() - 48)
         }
-    } while (count > 0)
-    return number
+    }
+    return decimal(digits, base)
 
 }
 
@@ -437,106 +355,87 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var result: String = ""
+    var result = ""
     var num = n
     var count = 0
-    if (n > 999) {
-        count += 1000
-    }
-    if (n > 99 && count == 0) {
-        count += 100
-    }
-    if (n > 9 && count == 0) {
-        count += 10
-    }
-    if (n <= 9 && count == 0) {
-        count += 1
+    when {
+        n > 999 -> {
+            count += 1000
+        }
+        n > 99 && count == 0 -> {
+            count += 100
+        }
+        n > 9 && count == 0 -> {
+            count += 10
+        }
+        n <= 9 && count == 0 -> {
+            count += 1
+        }
     }
     do {
-        println(count)
-        if (num < 10) {
-            when {
-                num < 4 -> {
-                    for (i in 1..num) {
-                        result += "I"
-                    }
-                }
-                num == 4 -> {
-                    result += "IV"
-                }
-                num == 5 -> {
-                    result += "V"
-                }
-
-                num in 6..8 -> {
-                    result += "V"
-                    for (i in 1..(num - 5)) {
-                        result += "I"
-                    }
-                }
-                num == 9 -> {
-                    result += "IX"
-                }
-            }
-        }
-        if (num / 10 < 10 && num in 10..99) {
-            when {
-                num / 10 in 1..3 -> {
-                    for (i in 1..(num / 10)) {
-                        result += "X"
-                    }
-                }
-                num / 10 == 4 -> {
-                    result += "XL"
-                }
-                num / 10 == 5 -> {
-                    result += "L"
-                }
-                num / 10 in 6..8 -> {
-                    result += "L"
-                    for (i in 1..((num / 10) - 5))
-                        result += "X"
-                }
-                num / 10 == 9 -> {
-                    result += "XC"
-                }
-            }
-        }
-        if (num / 100 < 10 && num in 100..999) {
-            when {
-                num / 100 in 1..3 -> {
-                    for (i in 1..(num / 100))
-                        result += "C"
-                }
-                num / 100 == 4 -> {
-                    result += "CD"
-                }
-                num / 100 == 5 -> {
-                    result += "D"
-                }
-                num / 100 in 6..8 -> {
-                    result += "D"
-                    for (i in 1..((num / 100) - 5)) {
-                        result += "C"
-                    }
-                }
-                num / 100 == 9 -> {
-                    result += "CM"
-                }
-            }
-        }
-        if (num / 1000 < 10 && num >= 1000) {
-            for (i in 1..(num / 1000)) {
-                result += "M"
-            }
-        }
-        num -= (num / count) * count
+        result+=helproman(num,count)
+        num %= count
         if (num >= count / 10) {
             count /= 10
         } else {
             count /= 100
+            if (num >= count / 10) {
+                count /= 10
+            }
         }
     } while (num > 0)
+    return result
+}
+
+fun helproman(num: Int, div: Int): String {
+    var result = ""
+    when {
+        num / div in 1..3 -> {
+            for (i in 1..(num / div)) {
+                when {
+                    div == 1 -> result += "I"
+                    div == 10 -> result += "X"
+                    div == 100 -> result += "C"
+                    div == 1000 -> result += "M"
+                }
+            }
+        }
+        num / div == 4 -> {
+            when {
+                div == 1 -> result += "IV"
+                div == 10 -> result += "XL"
+                div == 100 -> result += "CD"
+            }
+        }
+        num / div == 5 -> {
+            when {
+                div == 1 -> result += "V"
+                div == 10 -> result += "L"
+                div == 100 -> result += "D"
+            }
+        }
+        num / div in 6..8 -> {
+            when {
+                div == 1 -> result += "V"
+                div == 10 -> result += "L"
+                div == 100 -> result += "D"
+            }
+            for (i in 1..((num / div) - 5)) {
+                when {
+                    div == 1 -> result += "I"
+                    div == 10 -> result += "X"
+                    div == 100 -> result += "C"
+                }
+            }
+        }
+        num / div == 9 -> {
+            when {
+                div == 1 -> result += "IX"
+                div == 10 -> result += "XC"
+                div == 100 -> result += "CM"
+            }
+        }
+    }
     return result
 }
 
