@@ -220,12 +220,17 @@ fun factorize(n: Int): List<Int> {
     var k = 2
     var x = n
     val result = mutableListOf<Int>()
-    do {
-        if (x % k == 0) {
-            result.add(k)
-            x /= k
-        } else k++
-    } while (k <= n / 2)
+    if (isPrime(n)) {
+        result.add(n)
+        return result
+    } else {
+        do {
+            if (x % k == 0) {
+                result.add(k)
+                x /= k
+            } else k++
+        } while (k <= n / 2)
+    }
     return result
 
 }
@@ -373,12 +378,13 @@ fun roman(n: Int): String {
         }
     }
     do {
-        result+=helproman(num,count)
+        result += helproman(num, count)
         num %= count
+        println(count)
         if (num >= count / 10) {
             count /= 10
         } else {
-            count /= 100
+            count /= 10
             if (num >= count / 10) {
                 count /= 10
             }
