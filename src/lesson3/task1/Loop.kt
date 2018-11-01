@@ -106,16 +106,16 @@ fun fib(n: Int): Int {
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int {
-    return if ((m % n == 0) || (n % m == 0)) max/**/(m, n)
-    else {
-        var divisor = max(m, n) / 2
-        do {
-            divisor--
-        } while (m % divisor != 0 || n % divisor != 0)
-        (m * n) / divisor
-    }
-}
+fun lcm(m: Int, n: Int): Int =
+        if ((m % n == 0) || (n % m == 0)) max/**/(m, n)
+        else {
+            var divisor = max(m, n) / 2
+            do {
+                divisor--
+            } while (m % divisor != 0 || n % divisor != 0)
+            (m * n) / divisor
+        }
+
 
 /**
  * Простая
@@ -169,8 +169,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var k = floor(sqrt(n.toDouble()) - 1)
-    k++
+    var k = floor(sqrt(n.toDouble()))
     if (sqr(k) >= m && sqr(k) <= n) {
         return true
     }
@@ -221,21 +220,30 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var sinX = x % (2 * PI)
-    println(sinX)
-    var k = x % (2 * PI)
     var number = 1
     var n = 1.0
-    if (abs(k / factorial(number)) > eps) {
+    return sincos(x, eps, number, n, x)
+}
+
+fun sincos(element: Double, eps: Double, number: Int, n: Double, k: Double): Double {
+    val b = 2 * PI
+    var result = element % b
+    var l = result
+    var с = n
+    var num = number
+    if (abs(l / factorial(num)) > eps) {
         do {
-            k *= (x % (2 * PI)) * (x % (2 * PI))
-            number += 2
-            sinX -= (k / factorial(number) * n)
-            n *= -1.0
-            println(sinX)
-        } while (abs(k / factorial(number)) > eps)
+            l *= sqr(k % b)
+            num += 2
+            if (n != -1.0) {
+                result -= (l / factorial(num) * с)
+            } else {
+                result += (l / factorial(num) * с)
+            }
+            с *= -1.0
+        } while (abs(l / factorial(num)) > eps)
     }
-    return sinX
+    return result
 }
 
 /**
@@ -246,17 +254,9 @@ fun sin(x: Double, eps: Double): Double {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var CosX = 1.0
-    var k = 1.0
     var number = 0
     var n = -1.0
-    do {
-        k *= (x % (2 * PI)) * (x % (2 * PI))
-        number += 2
-        CosX += (k / factorial(number)) * n
-        n *= -1.0
-    } while (k / factorial(number) > eps)
-    return CosX
+    return sincos(1.0, eps, number, n, x)
 }
 
 /**
@@ -300,27 +300,9 @@ fun revert(n: Int): Int {
  *
  * Использовать операции со строками в этой задаче запрещается.
  */
-fun isPalindrome(n: Int): Boolean {
-    var num = n
-    var count = 0
-    var div = 1
-    var rnum = 0
-    if (n > 9) {
-        do {
-            div *= 10
-            count++
-            num /= 10
-        } while (num > 9)
-        num = n
-        do {
-            rnum += (num % 10) * div
-            div /= 10
-            num /= 10
-            count--
-        } while (div > 0)
-    }
-    return if (n > 9) n == rnum else true
-}
+fun isPalindrome(n: Int): Boolean =
+        if (n > 9) n == revert(n) else true
+
 
 /**
  * Средняя
@@ -358,23 +340,22 @@ fun hasDifferentDigits(n: Int): Boolean {
 fun squareSequenceDigit(n: Int): Int {
     var count = 0
     var k = 0
-    var number: Int
-
     do {
         k++
-        var count1 = 0
+        var count1: Int
         var x = sqr(k)
-        do {
-            count1++
-            x /= 10
-        } while (x > 0)
+        count1 = digitNumber(x)
         count += count1
     } while (count < n)
-    number = sqr(k)
+    return numhelp(count, n, sqr(k))
+}
+
+fun numhelp(count: Int, n: Int, number: Int): Int {
+    var number1 = number
     for (i in 1..count - n) {
-        number /= 10
+        number1 /= 10
     }
-    return number % 10
+    return number1 % 10
 }
 
 /**
@@ -389,20 +370,12 @@ fun squareSequenceDigit(n: Int): Int {
 fun fibSequenceDigit(n: Int): Int {
     var count = 0
     var k = 0
-    var number: Int
     do {
         k++
-        var count1 = 0
+        var count1: Int
         var x = fib(k)
-        do {
-            count1++
-            x /= 10
-        } while (x > 0)
+        count1 = digitNumber(x)
         count += count1
     } while (count < n)
-    number = fib(k)
-    for (i in 1..count - n) {
-        number /= 10
-    }
-    return number % 10
+    return numhelp(count, n, fib(k))
 }
