@@ -107,9 +107,9 @@ fun fib(n: Int): Int {
  * минимальное число k, которое делится и на m и на n без остатка
  */
 fun lcm(m: Int, n: Int): Int =
-        if ((m % n == 0) || (n % m == 0)) max/**/(m, n)
+        if ((m % n == 0) || (n % m == 0)) max(m, n)
         else {
-            var divisor = max(m, n) / 2
+            var divisor = min(m, n)
             do {
                 divisor--
             } while (m % divisor != 0 || n % divisor != 0)
@@ -156,8 +156,11 @@ fun isCoPrime(m: Int, n: Int): Boolean {
     var divisor = 1
     do {
         divisor++
-    } while ((m % divisor != 0 || n % divisor != 0) && divisor <= min(m, n))
-    return if (min(m, n) != 1) (m % divisor != 0 || n % divisor != 0) else true
+        if (m % divisor == 0 && n % divisor == 0) {
+            return false
+        }
+    } while (divisor <= min(m, n))
+    return true
 }
 
 
