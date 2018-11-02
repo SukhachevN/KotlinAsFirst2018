@@ -75,7 +75,23 @@ fun dateStrToDigit(str: String): String {
     val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     val parts = str.split(" ")
-    var dmy = mutableListOf<Int>()
+    val numbers = "0123456789"
+
+    val dmy = mutableListOf<Int>()
+    val parts1 = str.split(".")
+    if (parts1.size > 1) {
+        for (part in parts1) {
+            for (char in part) {
+                if (char !in numbers) {
+                    return ""
+                }
+            }
+            dmy.add(part.toInt())
+        }
+        if (daysInMonth(dmy[1], dmy[2]) <= dmy[0] || dmy[1] !in 1..12 || parts.size != 3) {
+            return ""
+        }
+    }
     var count = 1
     var result = ""
     while (count <= 3) {
