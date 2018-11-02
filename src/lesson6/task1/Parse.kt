@@ -77,7 +77,7 @@ fun dateStrToDigit(str: String): String {
     val parts = str.split(" ")
     var dmy = mutableListOf<Int>()
     var count = 1
-    var result: String = ""
+    var result = ""
     while (count <= 3) {
         for (part in parts) {
             if (count == 3) {
@@ -136,10 +136,16 @@ fun dateDigitToStr(digital: String): String {
     val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     val parts = digital.split(".")
+    val numbers = "0123456789"
     var count = 1
-    var result: String = ""
+    var result = ""
     var dmy = mutableListOf<Int>()
     for (part in parts) {
+        for (char in part) {
+            if (char !in numbers) {
+                return ""
+            }
+        }
         dmy.add(part.toInt())
     }
     if (daysInMonth(dmy[1], dmy[2]) <= dmy[0] || dmy[2] < 1000 || dmy[1] !in 1..12) {
@@ -156,13 +162,9 @@ fun dateDigitToStr(digital: String): String {
                 count++
             }
             if (count == 1) {
-                if (part.toInt() > 9) {
-                    result += part + " "
-                    count++
-                } else {
-                    result += "0" + part + " "
-                    count++
-                }
+                val x = part.toInt()
+                result += "$x "
+                count++
             }
 
         }
@@ -226,7 +228,7 @@ fun bestLongJump(jumps: String): Int {
             if (char in num) {
                 count++
             } else {
-                if (char != '%' && char != '-') {
+                if (char != '%' && char != '-' && char != ' ') {
                     return -1
                 }
             }
@@ -253,6 +255,9 @@ fun bestHighJump(jumps: String): Int {
     var element = -2
     val num = "0123456789"
     val parts = jumps.split(" ")
+    if (jumps == "") {
+        return -1
+    }
     var x = false
     for (part in parts) {
         var count = 0
@@ -292,6 +297,9 @@ fun plusMinus(expression: String): Int {
     var sign = '+'
     val num = "0123456789"
     var x = true
+    if (expression == "") {
+        throw IllegalArgumentException()
+    }
     val parts = expression.split(" ")
     for (part in parts) {
         var count = 0
