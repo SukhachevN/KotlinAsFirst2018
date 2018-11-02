@@ -134,7 +134,7 @@ fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
             student - student
         }
     }
-    return result.toMap()
+    return result
 }
 
 /**
@@ -206,7 +206,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var min = Double.MAX_VALUE
-    var namemin = ""
+    var namemin = "null"
     for ((key, value) in stuff) {
         if (value.first == kind) {
             if (value.second < min) {
@@ -215,10 +215,10 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
             }
         }
     }
-    if (namemin != "") {
-        return namemin
+    return if (namemin != "null") {
+        namemin
     } else {
-        return null
+        null
     }
 }
 
@@ -255,7 +255,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
                 result.put(element, setOf())
             }
         }
-        for ((k,v) in result) {
+        for ((k, v) in result) {
             if (k != key) {
                 for (element in a) {
                     for (x in v) {
@@ -266,7 +266,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
                         a.add(k)
                     }
                 }
-                result[key]=a.toSortedSet()
+                result[key] = a.toSortedSet()
             }
 
         }
@@ -288,13 +288,12 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
  *   subtractOf(a = mutableMapOf("a" to "z"), mapOf("a" to "z"))
  *     -> a changes to mutableMapOf() aka becomes empty
  */
-fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMap<String, String> {
-    for ((key) in a) {
-        if (a[key] in b) {
+fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): Unit {
+    for ((key, value) in b) {
+        if (a[key] == value) {
             a.remove(key)
         }
     }
-    return a
 }
 
 /**
@@ -303,13 +302,13 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMa
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    val list = mutableListOf<String>()
+    val list = mutableSetOf<String>()
     for (element in a) {
         if (element in b) {
             list.add(element)
         }
     }
-    return list
+    return list.toList()
 }
 
 /**
@@ -323,7 +322,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (element in word) {
-        if (element !in chars) {
+        if (element !in chars && element.toLowerCase() !in chars) {
             return false
         }
     }
@@ -418,13 +417,13 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var i = number
     var k = 0
     do {
-        if (k in list && i in list) {
+        if (k in list && i in list && k != i) {
             return Pair(list.indexOf(k), list.indexOf(i))
         } else {
             i--
             k++
         }
-    } while (k <= i / 2)
+    } while (k <= number / 2)
     return Pair(-1, -1)
 }
 
