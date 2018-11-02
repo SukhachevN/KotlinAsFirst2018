@@ -187,7 +187,7 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     var result = ""
     val num = "0123456789"
-    for (i in 0..phone.length - 1) {
+    for (i in 0 until phone.length - 1) {
         var x = true
         if (phone[i] == '+') {
             if (i == 0) {
@@ -197,10 +197,10 @@ fun flattenPhoneNumber(phone: String): String {
                 return ""
             }
         }
-        if (phone[i] in num && x == true) {
+        if (phone[i] in num && x) {
             result += phone[i]
         } else {
-            if (phone[i] != ' ' && phone[i] != '-' && phone[i] != '(' && phone[i] != ')' && x == true) {
+            if (phone[i] != ' ' && phone[i] != '-' && phone[i] != '(' && phone[i] != ')' && x) {
                 return ""
             }
         }
@@ -274,7 +274,7 @@ fun bestHighJump(jumps: String): Int {
             x = true
             element = part.toInt()
         }
-        if (part == "+" && x == true && element > max) {
+        if (part == "+" && x && element > max) {
             max = element
             x = false
         }
@@ -304,10 +304,10 @@ fun plusMinus(expression: String): Int {
     for (part in parts) {
         var count = 0
         for (char in part) {
-            if (char in num && x == true) {
+            if (char in num && x) {
                 count++
             } else {
-                if ((char == '-' || char == '+') && x == false) {
+                if ((char == '-' || char == '+') && !x) {
                     sign = char
                     x = true
                 } else {
@@ -316,7 +316,7 @@ fun plusMinus(expression: String): Int {
             }
 
         }
-        if (count == part.length && x == true) {
+        if (count == part.length && x) {
             if (sign == '+') {
                 result += part.toInt()
             } else {
@@ -382,7 +382,7 @@ fun mostExpensive(description: String): String {
         if (element.size != 3 && a != 1) {
             return ""
         }
-        var list = mutableListOf<String>()
+        val list = mutableListOf<String>()
         for (y in element) {
             list.add(y)
         }
