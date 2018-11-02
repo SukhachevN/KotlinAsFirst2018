@@ -102,7 +102,7 @@ fun dateStrToDigit(str: String): String {
             }
             if (count == 2) {
                 if (part in month) {
-                    if (month.indexOf(part) > 9) {
+                    if (month.indexOf(part) > 8) {
                         result += (month.indexOf(part) + 1).toString() + '.'
                     } else {
                         result += '0' + (month.indexOf(part) + 1).toString() + '.'
@@ -165,7 +165,7 @@ fun dateDigitToStr(digital: String): String {
         }
         dmy.add(part.toInt())
     }
-    if (daysInMonth(dmy[1], dmy[2]) <= dmy[0] || dmy[1] !in 1..12 || parts.size != 3) {
+    if (daysInMonth(dmy[1], dmy[2]) < dmy[0] || dmy[1] !in 1..12 || parts.size != 3) {
         return ""
     }
     while (count <= 3) {
