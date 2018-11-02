@@ -169,7 +169,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var k = floor(sqrt(n.toDouble()))
+    val k = floor(sqrt(n.toDouble()))
     if (sqr(k) >= m && sqr(k) <= n) {
         return true
     }
@@ -220,8 +220,8 @@ fun collatzSteps(x: Int): Int {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var number = 1
-    var n = 1.0
+    val number = 1
+    val n = 1.0
     return sincos(x, eps, number, n, x)
 }
 
@@ -254,8 +254,8 @@ fun sincos(element: Double, eps: Double, number: Int, n: Double, k: Double): Dou
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun cos(x: Double, eps: Double): Double {
-    var number = 0
-    var n = -1.0
+    val number = 0
+    val n = -1.0
     return sincos(1.0, eps, number, n, x)
 }
 
@@ -342,9 +342,7 @@ fun squareSequenceDigit(n: Int): Int {
     var k = 0
     do {
         k++
-        var count1: Int
-        var x = sqr(k)
-        count1 = digitNumber(x)
+        val count1 = digitNumber(sqr(k))
         count += count1
     } while (count < n)
     return numhelp(count, n, sqr(k))
@@ -372,9 +370,7 @@ fun fibSequenceDigit(n: Int): Int {
     var k = 0
     do {
         k++
-        var count1: Int
-        var x = fib(k)
-        count1 = digitNumber(x)
+        val count1 = digitNumber(fib(k))
         count += count1
     } while (count < n)
     return numhelp(count, n, fib(k))
