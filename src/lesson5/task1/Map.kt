@@ -322,7 +322,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (element in word) {
-        if (element !in chars && element.toLowerCase() !in chars) {
+        if (element !in chars || element.toLowerCase() !in chars) {
             return false
         }
     }
