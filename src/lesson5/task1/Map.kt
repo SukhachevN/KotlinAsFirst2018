@@ -97,7 +97,7 @@ fun buildWordSet(text: List<String>): MutableSet<String> {
  *   ) -> mapOf("Emergency" to "112, 911", "Police" to "02")
  */
 fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<String, String> {
-    var result: MutableMap<String, String> = mapA.toMutableMap()
+    val result: MutableMap<String, String> = mapA.toMutableMap()
     result.putAll(mapB)
     for ((key, value) in mapA) {
         if (result[key] != value) {
@@ -119,7 +119,7 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  *     -> mapOf(5 to listOf("Семён", "Михаил"), 3 to listOf("Марат"))
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
-    var result = mutableMapOf<Int, List<String>>()
+    val result = mutableMapOf<Int, List<String>>()
     var a = 0
     for (i in 5 downTo 1) {
         val student = mutableListOf<String>()
@@ -167,8 +167,8 @@ fun containsIn(a: Map<String, String>, b: Map<String, String>): Boolean {
  *     -> mapOf("MSFT" to 150.0, "NFLX" to 40.0)
  */
 fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Double> {
-    var result = mutableMapOf<String, Double>()
-    var list = mutableSetOf<String>()
+    val result = mutableMapOf<String, Double>()
+    val list = mutableSetOf<String>()
     var average = 0.0
     var n = 0.0
     for (pair in stockPrices) {
@@ -247,9 +247,9 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
  *        )
  */
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
-    var result = friends.toMutableMap()
+    val result = friends.toMutableMap()
     for ((key, value) in friends) {
-        var a = value.toMutableSet()
+        val a = value.toMutableSet()
         for (element in a) {
             if (element !in result) {
                 result.put(element, setOf())
@@ -418,9 +418,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var i = number
     var k = 0
     do {
-
         if (k in list && i in list) {
-
             return Pair(list.indexOf(k), list.indexOf(i))
         } else {
             i--
