@@ -417,7 +417,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var i = number
     var k = 0
     do {
-        if (k in list && i in list && k != i) {
+        if (k in list && i in list && list.indexOf(k) != list.indexOf(i)) {
             return Pair(list.indexOf(k), list.indexOf(i))
         } else {
             i--
