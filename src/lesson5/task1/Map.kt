@@ -291,8 +291,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
 fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMap<String, String> {
     for ((key) in a) {
         if (a[key] in b) {
-            print(a[key])
-            a - key
+            a.remove(key)
         }
     }
     return a
@@ -304,7 +303,7 @@ fun subtractOf(a: MutableMap<String, String>, b: Map<String, String>): MutableMa
  * Для двух списков людей найти людей, встречающихся в обоих списках
  */
 fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
-    var list = mutableListOf<String>()
+    val list = mutableListOf<String>()
     for (element in a) {
         if (element in b) {
             list.add(element)
@@ -324,7 +323,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (element in word) {
-        if (element in chars != true) {
+        if (element !in chars) {
             return false
         }
     }
@@ -344,8 +343,8 @@ fun canBuildFrom(chars: List<Char>, word: String): Boolean {
  *   extractRepeats(listOf("a", "b", "a")) -> mapOf("a" to 2)
  */
 fun extractRepeats(list: List<String>): Map<String, Int> {
-    var result = mutableMapOf<String, Int>()
-    var result1 = mutableMapOf<String, Int>()
+    val result = mutableMapOf<String, Int>()
+    val result1 = mutableMapOf<String, Int>()
     for (element in list) {
         result.put(element, 0)
     }
@@ -374,9 +373,9 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    var list = mutableMapOf<String, MutableSet<Char>>()
+    val list = mutableMapOf<String, MutableSet<Char>>()
     for (element in words) {
-        var charlist = mutableSetOf<Char>()
+        val charlist = mutableSetOf<Char>()
         for (char in element) {
             charlist.add(char)
         }
@@ -420,7 +419,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     var k = 0
     do {
 
-        if (k in list == true && i in list == true) {
+        if (k in list && i in list) {
 
             return Pair(list.indexOf(k), list.indexOf(i))
         } else {
