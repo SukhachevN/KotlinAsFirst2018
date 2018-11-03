@@ -76,7 +76,9 @@ fun dateStrToDigit(str: String): String {
             "августа", "сентября", "октября", "ноября", "декабря")
     val parts = str.split(" ")
     val numbers = "0123456789"
-
+    if (parts.size != 3) {
+        return ""
+    }
     val dmy = mutableListOf<Int>()
     val parts1 = str.split(".")
     if (parts1.size > 1) {
@@ -96,6 +98,11 @@ fun dateStrToDigit(str: String): String {
     var result = ""
     while (count <= 3) {
         for (part in parts) {
+            for (char in part) {
+                if (char !in numbers && count != 2) {
+                    return ""
+                }
+            }
             if (count == 3) {
                 result += part
                 count++
