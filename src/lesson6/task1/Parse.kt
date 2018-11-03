@@ -132,7 +132,7 @@ fun dateStrToDigit(str: String): String {
     for (part in parts2) {
         dmy.add(part.toInt())
     }
-    if (daysInMonth(dmy[1], dmy[2]) <= dmy[0]) {
+    if (daysInMonth(dmy[1], dmy[2]) < dmy[0]) {
         return ""
     } else {
         return result
@@ -302,7 +302,12 @@ fun bestHighJump(jumps: String): Int {
             x = false
         }
     }
-    if (parts.last() != "-" && parts.last() != "+" && parts.last() != "%") {
+    if (max == -1) {
+        for (char in parts.last()) {
+            if (char !in num) {
+                return -1
+            }
+        }
         if (parts.last().toInt() > max) {
             max = parts.last().toInt()
         }
