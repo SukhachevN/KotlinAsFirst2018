@@ -249,26 +249,20 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = friends.toMutableMap()
     for ((key, value) in friends) {
-        val a = value.toMutableSet()
-        for (element in a) {
-            if (element !in result) {
-                result.put(element, setOf())
+        for (element in value) {
+            if (element in friends.keys && friends[element] != null) {
+                if (result[key] != null) {
+                    result[key] = friends[element]!! + result[key]!!
+                }
+            } else {
+                result[element] = setOf()
             }
         }
-        for ((k, v) in result) {
-            if (k != key) {
-                for (element in a) {
-                    for (x in v) {
-                        if (x !in value && x != key)
-                            a.add(x)
-                    }
-                    if (k !in value && k in element) {
-                        a.add(k)
-                    }
-                }
-                result[key] = a.toSortedSet()
-            }
-
+    }
+    for ((key, value) in result) {
+        if (value.isNotEmpty()) {
+            val x = value - key
+            result[key] = x
         }
     }
     return result
@@ -322,7 +316,7 @@ fun whoAreInBoth(a: List<String>, b: List<String>): List<String> {
  */
 fun canBuildFrom(chars: List<Char>, word: String): Boolean {
     for (element in word) {
-        if (element.toUpperCase() !in chars || element.toLowerCase() !in chars) {
+        if (element.toUpperCase() !in chars && element.toLowerCase() !in chars) {
             return false
         }
     }
@@ -381,16 +375,9 @@ fun hasAnagrams(words: List<String>): Boolean {
         list[element] = charlist
     }
     for (element in words) {
-        for ((key, value) in list) {
-            var count = 0
-            for (char in element) {
-                if (char in value && element != key) {
-                    count++
-                }
-            }
-            if (count == element.length) {
-                return true
-            }
+        val check = if (list.size > 1) list - element else list
+        if (element.toSortedSet() in check.values) {
+            return true
         }
     }
     return false
