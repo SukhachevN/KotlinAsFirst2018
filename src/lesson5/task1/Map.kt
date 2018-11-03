@@ -206,19 +206,29 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
  */
 fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): String? {
     var min = Double.MAX_VALUE
-    var namemin = "null"
+    var namemin = ""
+    var flag = false
     for ((key, value) in stuff) {
         if (value.first == kind) {
             if (value.second < min) {
                 min = value.second
-                namemin = key
+                if (key != "" && flag) {
+                    namemin = key
+                } else {
+                    namemin = "noname"
+                }
+                flag = true
             }
         }
     }
-    return if (namemin != "null") {
-        namemin
+    if (flag) {
+        if (namemin == "noname") {
+            return ""
+        } else {
+            return namemin
+        }
     } else {
-        null
+        return null
     }
 }
 
@@ -252,17 +262,12 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         for (element in value) {
             if (element in friends.keys && friends[element] != null) {
                 if (result[key] != null) {
-                    result[key] = friends[element]!! + result[key]!!
+                    val x = friends[element]!! - key
+                    result[key] = x + result[key]!!
                 }
             } else {
                 result[element] = setOf()
             }
-        }
-    }
-    for ((key, value) in result) {
-        if (value.isNotEmpty()) {
-            val x = value - key
-            result[key] = x
         }
     }
     return result
