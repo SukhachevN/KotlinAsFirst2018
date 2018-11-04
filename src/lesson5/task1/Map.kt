@@ -212,21 +212,13 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
         if (value.first == kind) {
             if (value.second < min) {
                 min = value.second
-                if (key != "" && flag) {
-                    namemin = key
-                } else {
-                    namemin = "noname"
-                }
+                namemin = key
                 flag = true
             }
         }
     }
     if (flag) {
-        if (namemin == "noname") {
-            return ""
-        } else {
-            return namemin
-        }
+        return namemin
     } else {
         return null
     }
