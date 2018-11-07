@@ -109,7 +109,12 @@ fun fib(n: Int): Int {
 fun lcm(m: Int, n: Int): Int =
         if ((m % n == 0) || (n % m == 0)) max(m, n)
         else {
-            var divisor = min(m, n)
+            var divisor: Int
+            if (isPrime(min(m, n))) {
+                divisor = min(m, n)
+            } else {
+                divisor = min(m, n) / 2
+            }
             do {
                 divisor--
             } while (m % divisor != 0 || n % divisor != 0)
@@ -154,12 +159,13 @@ fun maxDivisor(n: Int): Int {
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     var divisor = 1
+    val a = if (isPrime(min(m, n))) min(m, n) else min(m, n) / 2
     do {
         divisor++
         if (m % divisor == 0 && n % divisor == 0) {
             return false
         }
-    } while (divisor <= min(m, n))
+    } while (divisor <= a)
     return true
 }
 
@@ -173,7 +179,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
     val k = floor(sqrt(n.toDouble()))
-    if (sqr(k) >= m && sqr(k) <= n) {
+    if (sqr(k) >= m) {
         return true
     }
     return false
@@ -225,25 +231,29 @@ fun collatzSteps(x: Int): Int {
 fun sin(x: Double, eps: Double): Double {
     val number = 1
     val n = 1.0
-    return sincos(x, eps, number, n, x)
+    return sinCos(x, eps, number, n, x)
 }
 
-fun sincos(element: Double, eps: Double, number: Int, n: Double, k: Double): Double {
+fun sinCos(element: Double, eps: Double, number: Int, n: Double, k: Double): Double {
     val b = 2 * PI
     var result = element % b
     var l = result
-    var с = n
+    var c = n
     var num = number
     if (abs(l / factorial(num)) > eps) {
         do {
             l *= sqr(k % b)
             num += 2
-            if (n != -1.0) {
-                result -= (l / factorial(num) * с)
+            if (abs(l / factorial(num)) > eps) {
+                if (n != -1.0) {
+                    result -= (l / factorial(num) * c)
+                } else {
+                    result += (l / factorial(num) * c)
+                }
+                c *= -1.0
             } else {
-                result += (l / factorial(num) * с)
+                return result
             }
-            с *= -1.0
         } while (abs(l / factorial(num)) > eps)
     }
     return result
@@ -259,7 +269,7 @@ fun sincos(element: Double, eps: Double, number: Int, n: Double, k: Double): Dou
 fun cos(x: Double, eps: Double): Double {
     val number = 0
     val n = -1.0
-    return sincos(1.0, eps, number, n, x)
+    return sinCos(1.0, eps, number, n, x)
 }
 
 /**
@@ -271,24 +281,20 @@ fun cos(x: Double, eps: Double): Double {
  */
 fun revert(n: Int): Int {
     var num = n
-    var count = 0
     var div = 1
-    var rnum = 0
+    var rNum = 0
     if (n > 9) {
         do {
             div *= 10
-            count++
             num /= 10
         } while (num > 9)
         num = n
         do {
-            rnum += (num % 10) * div
+            rNum += (num % 10) * div
             div /= 10
             num /= 10
-            count--
-
         } while (div > 0)
-        return rnum
+        return rNum
     } else {
         return n
     }
@@ -304,7 +310,7 @@ fun revert(n: Int): Int {
  * Использовать операции со строками в этой задаче запрещается.
  */
 fun isPalindrome(n: Int): Boolean =
-        if (n > 9) n == revert(n) else true
+        n == revert(n)
 
 
 /**
@@ -348,10 +354,10 @@ fun squareSequenceDigit(n: Int): Int {
         val count1 = digitNumber(sqr(k))
         count += count1
     } while (count < n)
-    return numhelp(count, n, sqr(k))
+    return numHelp(count, n, sqr(k))
 }
 
-fun numhelp(count: Int, n: Int, number: Int): Int {
+fun numHelp(count: Int, n: Int, number: Int): Int {
     var number1 = number
     for (i in 1..count - n) {
         number1 /= 10
@@ -376,5 +382,5 @@ fun fibSequenceDigit(n: Int): Int {
         val count1 = digitNumber(fib(k))
         count += count1
     } while (count < n)
-    return numhelp(count, n, fib(k))
+    return numHelp(count, n, fib(k))
 }
