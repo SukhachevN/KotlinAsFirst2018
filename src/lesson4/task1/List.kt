@@ -5,6 +5,7 @@ package lesson4.task1
 import lesson1.task1.discriminant
 import lesson1.task1.sqr
 import lesson3.task1.isPrime
+import kotlin.math.log
 import kotlin.math.sqrt
 
 /**
@@ -202,9 +203,8 @@ fun polynom(p: List<Double>, x: Double): Double {
 fun accumulate(list: MutableList<Double>): MutableList<Double> {
     var sum = 0.0
     for (i in 0 until list.size) {
-        val element = list[i] + sum
         sum += list[i]
-        list[i] = element
+        list[i] = sum
     }
     return list
 }
@@ -242,18 +242,8 @@ fun factorize(n: Int): List<Int> {
  * Результат разложения вернуть в виде строки, например 75 -> 3*5*5
  * Множители в результирующей строке должны располагаться по возрастанию.
  */
-fun factorizeToString(n: Int): String {
-    var string = ""
-    val list = factorize(n)
-    return if (list.size > 1) {
-        for (element in list) {
-            string += "$element*"
-        }
-        string.substring(0, string.length - 1)
-    } else {
-        n.toString()
-    }
-}
+fun factorizeToString(n: Int): String =
+        factorize(n).joinToString(separator = "*", prefix = "")
 
 /**
  * Средняя
@@ -265,21 +255,17 @@ fun factorizeToString(n: Int): String {
 fun convert(n: Int, base: Int): List<Int> {
     val result = mutableListOf<Int>()
     var number = n
-    var count = 0
-    var base1 = 1
     do {
-        base1 *= base
-        count++
-    } while (base1 <= number)
-    base1 /= base
-    do {
-        result.add(number / base1)
-        number %= base1
-        base1 /= base
-        count--
-
-    } while (count > 0)
-    return result
+        result.add(number % base)
+        number /= base
+    } while (number >= base)
+    result.add(number)
+    if (result.last() != 0) {
+        return result.asReversed()
+    } else {
+        result.remove(result.last())
+    }
+    return result.asReversed()
 }
 
 /**
@@ -291,18 +277,17 @@ fun convert(n: Int, base: Int): List<Int> {
  * Например: n = 100, base = 4 -> 1210, n = 250, base = 14 -> 13c
  */
 fun convertToString(n: Int, base: Int): String {
-    var string = ""
+    val result = mutableListOf<String>()
     val list = convert(n, base)
     for (element in list) {
         if (element <= 9) {
-            string += "$element"
+            result.add("$element")
         } else {
-            val x = (element + 87).toChar()
-            string += x.toString()
+            result.add((element + 87).toChar().toString())
 
         }
     }
-    return string
+    return result.joinToString(separator = "")
 }
 
 /**
@@ -360,85 +345,80 @@ fun decimalFromString(str: String, base: Int): Int {
  * Например: 23 = XXIII, 44 = XLIV, 100 = C
  */
 fun roman(n: Int): String {
-    var result = ""
+    val result = mutableListOf<String>()
     var num = n
     var count = 0
     when {
         n > 999 -> {
-            count += 1000
+            count = 1000
         }
         n > 99 && count == 0 -> {
-            count += 100
+            count = 100
         }
         n > 9 && count == 0 -> {
-            count += 10
+            count = 10
         }
         n <= 9 && count == 0 -> {
-            count += 1
+            count = 1
         }
     }
     do {
-        result += helproman(num, count)
+        result.add(helpRoman(num, count).joinToString(separator = ""))
         num %= count
-        println(count)
-        if (num >= count / 10) {
+        count /= 10
+        if (num < count / 10) {
             count /= 10
-        } else {
-            count /= 10
-            if (num >= count / 10) {
-                count /= 10
-            }
         }
     } while (num > 0)
-    return result
+    return result.joinToString(separator = "")
 }
 
-fun helproman(num: Int, div: Int): String {
-    var result = ""
+fun helpRoman(num: Int, div: Int): MutableList<String> {
+    val result = mutableListOf<String>()
     when {
         num / div in 1..3 -> {
             for (i in 1..(num / div)) {
-                when {
-                    div == 1 -> result += "I"
-                    div == 10 -> result += "X"
-                    div == 100 -> result += "C"
-                    div == 1000 -> result += "M"
+                when (div) {
+                    1 -> result.add("I")
+                    10 -> result.add("X")
+                    100 -> result.add("C")
+                    1000 -> result.add("M")
                 }
             }
         }
         num / div == 4 -> {
-            when {
-                div == 1 -> result += "IV"
-                div == 10 -> result += "XL"
-                div == 100 -> result += "CD"
+            when (div) {
+                1 -> result.add("IV")
+                10 -> result.add("XL")
+                100 -> result.add("CD")
             }
         }
         num / div == 5 -> {
-            when {
-                div == 1 -> result += "V"
-                div == 10 -> result += "L"
-                div == 100 -> result += "D"
+            when (div) {
+                1 -> result.add("V")
+                10 -> result.add("L")
+                100 -> result.add("D")
             }
         }
         num / div in 6..8 -> {
-            when {
-                div == 1 -> result += "V"
-                div == 10 -> result += "L"
-                div == 100 -> result += "D"
+            when (div) {
+                1 -> result.add("V")
+                10 -> result.add("L")
+                100 -> result.add("D")
             }
             for (i in 1..((num / div) - 5)) {
-                when {
-                    div == 1 -> result += "I"
-                    div == 10 -> result += "X"
-                    div == 100 -> result += "C"
+                when (div) {
+                    1 -> result.add("I")
+                    10 -> result.add("X")
+                    100 -> result.add("C")
                 }
             }
         }
         num / div == 9 -> {
-            when {
-                div == 1 -> result += "IX"
-                div == 10 -> result += "XC"
-                div == 100 -> result += "CM"
+            when (div) {
+                1 -> result.add("IX")
+                10 -> result.add("XC")
+                100 -> result.add("CM")
             }
         }
     }
