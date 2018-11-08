@@ -120,19 +120,16 @@ fun mergePhoneBooks(mapA: Map<String, String>, mapB: Map<String, String>): Map<S
  */
 fun buildGrades(grades: Map<String, Int>): Map<Int, List<String>> {
     val result = mutableMapOf<Int, List<String>>()
-    var a = 0
-    for (i in 5 downTo 1) {
+    val set = grades.values.toSet()
+    for (i in set) {
         val student = mutableListOf<String>()
         for ((key, value) in grades) {
             if (value == i) {
                 student.add(key)
-                a = i
             }
         }
-        if (a == i) {
-            result.put(i, student.sortedDescending())
-            student - student
-        }
+        result.put(i, student.sortedDescending())
+
     }
     return result
 }
@@ -250,22 +247,22 @@ fun findCheapestStuff(stuff: Map<String, Pair<String, Double>>, kind: String): S
 fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<String>> {
     val result = mutableMapOf<String, Set<String>>()
     val all = mutableSetOf<String>()
-    for ((key, value) in friends) {
+    for (value in friends.values) {
         all += value
-        all += key
     }
     for (element in all) {
         val humans = mutableSetOf<String>()
         if (friends[element] != null) {
             humans += friends[element]!!
         }
-        for ((key, value) in friends) {
-            if (key in humans && value.isNotEmpty()) {
-                humans += value
+        for (i in 0..(friends.size - 1)) {
+            for ((key, value) in friends) {
+                if (key in humans && value.isNotEmpty()) {
+                    humans += value
+                }
             }
+            result.put(element, humans - element)
         }
-        result.put(element, humans - element)
-
     }
     return result
 }
