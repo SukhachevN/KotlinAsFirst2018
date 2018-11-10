@@ -109,15 +109,15 @@ fun fib(n: Int): Int {
 fun lcm(m: Int, n: Int): Int =
         if ((m % n == 0) || (n % m == 0)) max(m, n)
         else {
-            var divisor: Int
             if (isPrime(min(m, n))) {
-                divisor = min(m, n)
-            } else {
-                divisor = min(m, n) / 2
+                m * n
             }
-            do {
-                divisor--
-            } while (m % divisor != 0 || n % divisor != 0)
+            var divisor = min(m, n) / 2
+            if (m % divisor != 0 || n % divisor != 0) {
+                do {
+                    divisor--
+                } while (m % divisor != 0 || n % divisor != 0)
+            }
             (m * n) / divisor
         }
 
@@ -159,7 +159,10 @@ fun maxDivisor(n: Int): Int {
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
     var divisor = 1
-    val a = if (isPrime(min(m, n))) min(m, n) else min(m, n) / 2
+    val a = min(m, n) / 2
+    if (isPrime(min(m, n)) && max(m, n) % min(m, n) == 0) {
+        return false
+    }
     do {
         divisor++
         if (m % divisor == 0 && n % divisor == 0) {
@@ -177,13 +180,8 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    val k = floor(sqrt(n.toDouble()))
-    if (sqr(k) >= m) {
-        return true
-    }
-    return false
-}
+fun squareBetweenExists(m: Int, n: Int): Boolean =
+        sqr(floor(sqrt(n.toDouble()))) >= m
 
 
 /**
@@ -236,7 +234,7 @@ fun sin(x: Double, eps: Double): Double {
 
 fun sinCos(element: Double, eps: Double, number: Int, n: Double, k: Double): Double {
     val b = 2 * PI
-    var result = element % b
+    var result = if (element != 1.0) element % b else 1.0
     var l = result
     var c = n
     var num = number
@@ -244,7 +242,7 @@ fun sinCos(element: Double, eps: Double, number: Int, n: Double, k: Double): Dou
         do {
             l *= sqr(k % b)
             num += 2
-            if (abs(l / factorial(num)) > eps) {
+            if (abs(l / factorial(num)) >= eps) {
                 if (n != -1.0) {
                     result -= (l / factorial(num) * c)
                 } else {
@@ -254,7 +252,7 @@ fun sinCos(element: Double, eps: Double, number: Int, n: Double, k: Double): Dou
             } else {
                 return result
             }
-        } while (abs(l / factorial(num)) > eps)
+        } while (abs(l / factorial(num)) >= eps)
     }
     return result
 }
