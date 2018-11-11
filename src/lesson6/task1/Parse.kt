@@ -75,44 +75,23 @@ fun dateStrToDigit(str: String): String {
     val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     val parts = str.split(" ")
-    val numbers = "0123456789"
-    if (parts.size != 3) {
+    if (errorString(str) != "ok") {
         return ""
     }
-    val dmy = mutableListOf<Int>()
-    val parts1 = str.split(".")
-    if (parts1.size > 1) {
-        for (part in parts1) {
-            for (char in part) {
-                if (char !in numbers) {
-                    return ""
-                }
-            }
-            dmy.add(part.toInt())
-        }
-        if (daysInMonth(dmy[1], dmy[2]) <= dmy[0] || dmy[1] !in 1..12 || parts.size != 3) {
-            return ""
-        }
-    }
     var count = 1
-    var result = ""
+    val result = StringBuilder()
     while (count <= 3) {
         for (part in parts) {
-            for (char in part) {
-                if (char !in numbers && count != 2) {
-                    return ""
-                }
-            }
             if (count == 3) {
-                result += part
+                result.append(part)
                 count++
             }
             if (count == 2) {
                 if (part in month) {
                     if (month.indexOf(part) > 8) {
-                        result += (month.indexOf(part) + 1).toString() + '.'
+                        result.append((month.indexOf(part) + 1).toString() + '.')
                     } else {
-                        result += '0' + (month.indexOf(part) + 1).toString() + '.'
+                        result.append('0' + (month.indexOf(part) + 1).toString() + '.')
                     }
                     count++
                 } else {
@@ -120,30 +99,56 @@ fun dateStrToDigit(str: String): String {
                 }
             }
             if (count == 1) {
-                if (part.toInt() <= 31) {
-                    if (part.toInt() > 9) {
-                        result += part + '.'
-                        count++
-                    } else {
-                        val x = part.toInt()
-                        result += '0' + "$x" + '.'
-                        count++
-                    }
+                if (part.toInt() > 9) {
+                    result.append(part + '.')
+                    count++
                 } else {
-                    return ""
+                    val x = part.toInt()
+                    result.append('0' + "$x" + '.')
+                    count++
                 }
             }
         }
     }
-    val parts2 = result.split(".")
-    for (part in parts2) {
-        dmy.add(part.toInt())
-    }
-    if (daysInMonth(dmy[1], dmy[2]) < dmy[0]) {
+    if (errorString(result.toString()) != "ok") {
         return ""
     } else {
-        return result
+        return result.toString()
     }
+}
+
+fun errorString(str: String): String {
+    val dmy = mutableListOf<Int>()
+    val numbers = "0123456789"
+    var parts = str.split(".")
+    if (parts.size == 3) {
+        for (part in parts) {
+            for (char in part) {
+                if (char !in numbers) {
+                    return ""
+                }
+            }
+            dmy.add(part.toInt())
+        }
+        if (daysInMonth(dmy[1], dmy[2]) >= dmy[0] && dmy[1] in 1..12) {
+            return "ok"
+        }
+    } else {
+        parts = str.split(" ")
+        if (parts.size == 3) {
+            for (part in parts) {
+                for (char in part) {
+                    if (char in 'a'..'z') {
+                        return ""
+                    }
+                }
+            }
+            return "ok"
+        } else {
+            return ""
+        }
+    }
+    return ""
 }
 
 /**
@@ -160,40 +165,30 @@ fun dateDigitToStr(digital: String): String {
     val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     val parts = digital.split(".")
-    val numbers = "0123456789"
     var count = 1
-    var result = ""
-    val dmy = mutableListOf<Int>()
-    for (part in parts) {
-        for (char in part) {
-            if (char !in numbers) {
-                return ""
-            }
-        }
-        dmy.add(part.toInt())
-    }
-    if (daysInMonth(dmy[1], dmy[2]) < dmy[0] || dmy[1] !in 1..12 || parts.size != 3) {
-        return ""
+    val result = StringBuilder()
+    if (errorString(digital) != "ok") {
+        return errorString(digital)
     }
     while (count <= 3) {
         for (part in parts) {
             if (count == 3) {
-                result += part
+                result.append(part)
                 count++
             }
             if (count == 2) {
-                result += month[part.toInt() - 1] + " "
+                result.append(month[part.toInt() - 1] + " ")
                 count++
             }
             if (count == 1) {
                 val x = part.toInt()
-                result += "$x "
+                result.append("$x ")
                 count++
             }
 
         }
     }
-    return result
+    return result.toString()
 }
 
 /**
@@ -209,27 +204,27 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    var result = ""
+    val result = StringBuilder()
     val num = "0123456789"
     for (i in 0 until phone.length) {
         var x = true
         if (phone[i] == '+') {
             if (i == 0) {
-                result += "+"
+                result.append("+")
                 x = false
             } else {
                 return ""
             }
         }
         if (phone[i] in num && x) {
-            result += phone[i]
+            result.append(phone[i])
         } else {
             if (phone[i] != ' ' && phone[i] != '-' && phone[i] != '(' && phone[i] != ')' && x) {
                 return ""
             }
         }
     }
-    return result
+    return result.toString()
 }
 
 /**
