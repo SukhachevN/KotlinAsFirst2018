@@ -123,6 +123,9 @@ fun errorString(str: String): String {
     var parts = str.split(".")
     if (parts.size == 3) {
         for (part in parts) {
+            if (part.isEmpty()) {
+                return ""
+            }
             for (char in part) {
                 if (char !in numbers) {
                     return ""
@@ -224,7 +227,10 @@ fun flattenPhoneNumber(phone: String): String {
             }
         }
     }
-    return result.toString()
+    if (result.length > 1) {
+        return result.toString()
+    }
+    return ""
 }
 
 /**
