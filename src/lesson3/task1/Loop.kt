@@ -160,8 +160,8 @@ fun maxDivisor(n: Int): Int {
 fun isCoPrime(m: Int, n: Int): Boolean {
     var divisor = 1
     val a = min(m, n) / 2
-    if (isPrime(min(m, n)) && max(m, n) % min(m, n) == 0) {
-        return false
+    if (isPrime(min(m, n))) {
+        return (max(m, n) % min(m, n) != 0)
     }
     do {
         divisor++
