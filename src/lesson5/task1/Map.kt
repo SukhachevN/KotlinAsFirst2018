@@ -172,7 +172,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
             stock.put(key, 1.0)
         } else {
             stock[key] = stock[key]!! + 1.0
-            result[key] = (result[key]!! + value) / stock[key]!!
+            result[key] = ((stock[key]!! - 1.0) *result[key]!! + value) / stock[key]!!
         }
     }
     return result
