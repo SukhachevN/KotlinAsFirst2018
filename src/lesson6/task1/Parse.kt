@@ -110,16 +110,11 @@ fun dateStrToDigit(str: String): String {
             }
         }
     }
-    if (errorString(result.toString()) != "ok") {
-        return ""
-    } else {
-        return result.toString()
-    }
+    return if (errorString(result.toString()) != "ok") "" else result.toString()
 }
 
 fun errorString(str: String): String {
     val dmy = mutableListOf<Int>()
-    val numbers = "0123456789"
     var parts = str.split(".")
     if (parts.size == 3) {
         for (part in parts) {
@@ -127,13 +122,13 @@ fun errorString(str: String): String {
                 return ""
             }
             for (char in part) {
-                if (char !in numbers) {
+                if (char !in '0'..'9') {
                     return ""
                 }
             }
             dmy.add(part.toInt())
         }
-        if (daysInMonth(dmy[1], dmy[2]) >= dmy[0] && dmy[1] in 1..12) {
+        if (daysInMonth(dmy[1], dmy[2]) >= dmy[0] && dmy[1] in 1..12 && dmy[0] > 0) {
             return "ok"
         }
     } else {
@@ -141,7 +136,7 @@ fun errorString(str: String): String {
         if (parts.size == 3) {
             for (part in parts) {
                 for (char in part) {
-                    if (char in 'a'..'z') {
+                    if (char !in 'а'..'я' && char !in '0'..'9') {
                         return ""
                     }
                 }
@@ -208,7 +203,7 @@ fun dateDigitToStr(digital: String): String {
  */
 fun flattenPhoneNumber(phone: String): String {
     val result = StringBuilder()
-    val num = "0123456789"
+    var flag = true
     for (i in 0 until phone.length) {
         var x = true
         if (phone[i] == '+') {
@@ -219,7 +214,17 @@ fun flattenPhoneNumber(phone: String): String {
                 return ""
             }
         }
-        if (phone[i] in num && x) {
+        if (phone[i] == '(') {
+            flag = false
+        }
+        if (phone[i] == ')') {
+            if (!flag) {
+                flag = true
+            } else {
+                return ""
+            }
+        }
+        if (phone[i] in '0'..'9' && x) {
             result.append(phone[i])
         } else {
             if (phone[i] != ' ' && phone[i] != '-' && phone[i] != '(' && phone[i] != ')' && x) {
@@ -227,7 +232,7 @@ fun flattenPhoneNumber(phone: String): String {
             }
         }
     }
-    if (result.length > 1) {
+    if (result.length > 1 && flag) {
         return result.toString()
     }
     return ""
@@ -245,16 +250,14 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     var max = -1
-    val num = "0123456789"
     val parts = jumps.split(" ")
-
     for (part in parts) {
         var count = 0
         for (char in part) {
-            if (char in num) {
+            if (char in '0'..'9') {
                 count++
             } else {
-                if (char != '%' && char != '-' && char != ' ') {
+                if ((char != '%' && char != '-') || part.length != 1) {
                     return -1
                 }
             }
@@ -281,9 +284,8 @@ fun bestLongJump(jumps: String): Int {
 fun bestHighJump(jumps: String): Int {
     var max = -1
     var element = -2
-    val num = "0123456789"
     val parts = jumps.split(" ")
-    val s = listOf('%', '-', '+', ' ')
+    val s = listOf('%', '-', '+')
     if (jumps == "") {
         return -1
     }
@@ -291,7 +293,7 @@ fun bestHighJump(jumps: String): Int {
     for (part in parts) {
         var count = 0
         for (char in part) {
-            if (char in num) {
+            if (char in '0'..'9') {
                 count++
             } else {
                 if (char !in s) {
@@ -312,7 +314,7 @@ fun bestHighJump(jumps: String): Int {
     }
     if (max == -1) {
         for (char in parts.last()) {
-            if (char !in num) {
+            if (char !in '0'..'9') {
                 return -1
             }
         }
@@ -385,9 +387,7 @@ fun firstDuplicateIndex(str: String): Int {
     val parts = str.split(" ")
     for (part in parts) {
         space++
-        for (char in part) {
-            count++
-        }
+        count += part.length
         if (part.toLowerCase() == word) {
             space--
             return count + space - 2 * part.length
@@ -422,10 +422,7 @@ fun mostExpensive(description: String): String {
         if (element.size != 3 && a != 1) {
             return ""
         }
-        val list = mutableListOf<String>()
-        for (y in element) {
-            list.add(y)
-        }
+        val list = element.toMutableList()
         if (a == 1) {
             if (list[1].toDouble() > max) {
                 if (list[1].toDoubleOrNull() == null) {
