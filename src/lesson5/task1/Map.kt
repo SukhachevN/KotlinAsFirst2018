@@ -172,7 +172,7 @@ fun averageStockPrice(stockPrices: List<Pair<String, Double>>): Map<String, Doub
             stock.put(key, 1.0)
         } else {
             stock[key] = stock[key]!! + 1.0
-            result[key] = ((stock[key]!! - 1.0) *result[key]!! + value) / stock[key]!!
+            result[key] = ((stock[key]!! - 1.0) * result[key]!! + value) / stock[key]!!
         }
     }
     return result
@@ -250,12 +250,17 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
             humans += friends[element]!!
         }
         for (i in 0..(friends.size - 1)) {
+            var enough = true
             for ((key, value) in friends) {
                 if (key in humans && value.isNotEmpty()) {
                     humans += value
+                    enough = false
                 }
             }
             result.put(element, humans - element)
+            if (enough) {
+                break
+            }
         }
     }
     return result
