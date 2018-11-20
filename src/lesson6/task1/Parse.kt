@@ -307,7 +307,7 @@ fun bestHighJump(jumps: String): Int {
                 element = part.toInt()
             }
         }
-        if (part == "+" && x && element > max) {
+        if (part.contains("+") && x && element > max) {
             max = element
             x = false
         }
@@ -337,16 +337,16 @@ fun bestHighJump(jumps: String): Int {
 fun plusMinus(expression: String): Int {
     var result = 0
     var sign = '+'
-    val num = "0123456789"
     var x = true
     val parts = expression.split(" ")
     if (expression == "") {
         throw IllegalArgumentException()
     }
+    var last = ""
     for (part in parts) {
         var count = 0
         for (char in part) {
-            if (char in num && x) {
+            if (char in '0'..'9' && x) {
                 count++
             } else {
                 if ((char == '-' || char == '+') && !x) {
@@ -367,6 +367,10 @@ fun plusMinus(expression: String): Int {
             x = false
 
         }
+        last = part
+    }
+    if (last == "-" || last == "+" ) {
+        throw IllegalArgumentException()
     }
     return result
 }
