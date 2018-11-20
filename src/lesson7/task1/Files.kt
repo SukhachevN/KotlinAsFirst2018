@@ -5,6 +5,7 @@ package lesson7.task1
 import lesson3.task1.digitNumber
 import java.io.File
 
+
 /**
  * Пример
  *
@@ -208,7 +209,52 @@ fun centerFile(inputName: String, outputName: String) {
  * 8) Если входной файл удовлетворяет требованиям 1-7, то он должен быть в точности идентичен выходному файлу
  */
 fun alignFileByWidth(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    var maxLength = -1
+    for (string in text) {
+        if (string.length > maxLength) {
+            maxLength = string.length
+        }
+    }
+    File(outputName).bufferedWriter().use {
+        for (string in text) {
+            var currentLength = 0
+            val words = mutableListOf<String>()
+            for (word in string.split(" ")) {
+                if (word != "") {
+                    words.add(word)
+                    currentLength += word.length
+                }
+            }
+            if (words.size == 1) {
+                it.write(words.joinToString(separator = ""))
+            } else {
+                if (words.isNotEmpty()) {
+                    do {
+                        var flag = true
+                        var i = 0
+                        for (word in string.split(" ")) {
+                            if (word != "") {
+                                if (flag) {
+                                    flag = false
+                                } else {
+                                    if (currentLength < maxLength) {
+                                        words[i] = " " + words[i]
+                                    } else {
+                                        break
+                                    }
+                                }
+                                i++
+                                currentLength++
+                            }
+                        }
+                    } while (currentLength < maxLength)
+                    it.write(words.joinToString(separator = ""))
+                }
+            }
+            it.newLine()
+        }
+    }
 }
 
 /**
@@ -474,7 +520,54 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
-    TODO()
+    val text = File(inputName).readLines()
+    File(outputName).bufferedWriter().use {
+        it.write("<html><body>")
+        it.write("<p>")
+        for (string in text) {
+            if (string.isEmpty()) {
+                it.write("</p>")
+                it.write("<p>")
+            }
+            var lastSymbol = ' '
+            var i = false
+            var b = false
+            var s = false
+            for (char in string) {
+                if (char == '*' || char == '~') {
+                    if (char == '*' && lastSymbol == '*') {
+                        it.write("<b>")
+                        b = true
+                    }
+                    if (char == '*' && (lastSymbol != '*' || b)) {
+                        it.write("<i>")
+                        i = true
+                    }
+                    if (char == '~' && lastSymbol == '~' && !s) {
+                        it.write("<s>")
+                        s = true
+                    }
+                    if (char == '*' && !i && b) {
+                        it.write("</b>")
+                        b = false
+                    }
+                    if (char == '*' && lastSymbol != '*' && i) {
+                        it.write("</i>")
+                        i = false
+                    }
+                    if (char == '~' && s && lastSymbol == '~') {
+                        it.write("</s>")
+                        s = false
+                    }
+                } else {
+                    it.write(char.toString())
+                }
+                lastSymbol = char
+            }
+        }
+        it.write("</p>")
+        it.write("</body></html>")
+    }
 }
 
 /**
@@ -617,14 +710,19 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     var count = 1
     val digitList = rhv.toString().toMutableList()
     val valueList = mutableListOf<Int>()
-    for (i in 0..(digitNumber(lhv) - digitNumber(rhv) + 1)) {
+    val spaceBefore = StringBuilder()
+    for (i in 0..((digitNumber(rhv)) - 1)) {
+        spaceBefore.append(" ")
+    }
+    for (i in 0..(digitNumber(lhv) - digitNumber(rhv) + spaceBefore.length - 2)) {
         space.add(" ")
     }
-    for (i in 0..(2 + digitNumber(lhv))) {
+    for (i in 0..((digitNumber(rhv)) - 1 + digitNumber(lhv))) {
         line += "-"
     }
     File(outputName).bufferedWriter().use {
-        it.write("   $lhv")
+        it.write(spaceBefore.toString())
+        it.write("$lhv")
         it.newLine()
         it.write("*")
         it.write(space.joinToString(separator = ""))
@@ -638,12 +736,17 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             if (i != 0) {
                 it.write("+")
                 space.remove(space.first())
+                if (digitList.size != 1) {
+                    it.write((space - " ").joinToString(separator = ""))
+                }
+                it.write("$value")
+            } else {
+                it.write(spaceBefore.toString())
+                it.write("$value")
             }
-            it.write((space - " ").joinToString(separator = ""))
             if (space.isNotEmpty()) {
                 space.remove(space.first())
             }
-            it.write("$value")
             it.newLine()
             count *= 10
             digitList.remove(digitList.last())
@@ -654,7 +757,6 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.write(" $result")
     }
 }
-
 
 /**
  * Сложная
