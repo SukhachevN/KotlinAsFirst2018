@@ -3,6 +3,8 @@
 package lesson5.task1
 
 import lesson4.task1.factorize
+import kotlin.math.ceil
+import kotlin.math.floor
 
 /**
  * Пример
@@ -386,24 +388,10 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    var i = number
-    var k = 0
-    if (i != 0) {
-        do {
-            if (k in list && i in list && list.indexOf(k) != list.indexOf(i)) {
-                return Pair(list.indexOf(k), list.indexOf(i))
-            } else {
-                i--
-                k++
-            }
-        } while (k <= number / 2)
-    } else {
-        val list1 = list.toMutableList()
-        if (0 in list1) {
-            val a = list1.indexOf(0)
-            list1.removeAt(list1.indexOf(0))
-            if (0 in list1) {
-                return Pair(a, list1.indexOf(0) + 1)
+    for (i in 0..(list.size - 2)) {
+        for (j in (i + 1)..(list.size - 1)) {
+            if (list[i] + list[j] == number) {
+                return i to j
             }
         }
     }
