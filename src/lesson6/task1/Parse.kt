@@ -315,7 +315,7 @@ fun plusMinus(expression: String): Int {
     var sign = '+'
     var x = true
     val parts = expression.split(" ")
-    if (expression == "" || parts[0] == "") {
+    if (expression == "" || expression[0] == ' ') {
         throw IllegalArgumentException()
     }
     var last = ""
