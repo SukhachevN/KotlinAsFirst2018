@@ -78,38 +78,25 @@ fun dateStrToDigit(str: String): String {
     if (errorString(str) != "ok") {
         return ""
     }
-    var count = 1
     val result = StringBuilder()
-    while (count <= 3) {
-        for (part in parts) {
-            if (count == 3) {
-                result.append(part)
-                count++
-            }
-            if (count == 2) {
-                if (part in month) {
-                    if (month.indexOf(part) > 8) {
-                        result.append((month.indexOf(part) + 1).toString() + '.')
-                    } else {
-                        result.append('0' + (month.indexOf(part) + 1).toString() + '.')
-                    }
-                    count++
-                } else {
-                    return ""
-                }
-            }
-            if (count == 1) {
-                if (part.toInt() > 9) {
-                    result.append(part + '.')
-                    count++
-                } else {
-                    val x = part.toInt()
-                    result.append('0' + "$x" + '.')
-                    count++
-                }
-            }
+    if (parts[0].toIntOrNull() != null) {
+        if (parts[0].toInt() > 9) {
+            result.append(parts[0] + '.')
+        } else {
+            val x = parts[0].toInt()
+            result.append('0' + "$x" + '.')
         }
     }
+    if (parts[1] in month) {
+        if (month.indexOf(parts[1]) > 8) {
+            result.append((month.indexOf(parts[1]) + 1).toString() + '.')
+        } else {
+            result.append('0' + (month.indexOf(parts[1]) + 1).toString() + '.')
+        }
+    } else {
+        return ""
+    }
+    result.append(parts[2])
     return if (errorString(result.toString()) != "ok") "" else result.toString()
 }
 
@@ -163,29 +150,14 @@ fun dateDigitToStr(digital: String): String {
     val month = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля",
             "августа", "сентября", "октября", "ноября", "декабря")
     val parts = digital.split(".")
-    var count = 1
     val result = StringBuilder()
     if (errorString(digital) != "ok") {
         return errorString(digital)
     }
-    while (count <= 3) {
-        for (part in parts) {
-            if (count == 3) {
-                result.append(part)
-                count++
-            }
-            if (count == 2) {
-                result.append(month[part.toInt() - 1] + " ")
-                count++
-            }
-            if (count == 1) {
-                val x = part.toInt()
-                result.append("$x ")
-                count++
-            }
-
-        }
-    }
+    val x = parts[0].toInt()
+    result.append("$x ")
+    result.append(month[parts[1].toInt() - 1] + " ")
+    result.append(parts[2])
     return result.toString()
 }
 
@@ -204,6 +176,8 @@ fun dateDigitToStr(digital: String): String {
 fun flattenPhoneNumber(phone: String): String {
     val result = StringBuilder()
     var flag = true
+    var count = 0
+    var check = 0
     for (i in 0 until phone.length) {
         var x = true
         if (phone[i] == '+') {
@@ -215,19 +189,26 @@ fun flattenPhoneNumber(phone: String): String {
             }
         }
         if (phone[i] == '(') {
+            if (check != 0) {
+                return ""
+            }
+            check++
             flag = false
         }
         if (phone[i] == ')') {
-            if (!flag) {
-                flag = true
-            } else {
+            if (count == 0 || flag) {
                 return ""
+            } else {
+                flag = true
             }
         }
         if (phone[i] in '0'..'9' && x) {
             result.append(phone[i])
+            if (!flag) {
+                count++
+            }
         } else {
-            if (phone[i] != ' ' && phone[i] != '-' && phone[i] != '(' && phone[i] != ')' && x) {
+            if (phone[i] !in setOf(' ', '-', '(', ')') && x) {
                 return ""
             }
         }
@@ -284,15 +265,16 @@ fun bestLongJump(jumps: String): Int {
 fun bestHighJump(jumps: String): Int {
     var max = -1
     var element = -2
+    var lastElement = ""
     val parts = jumps.split(" ")
     val s = listOf('%', '-', '+')
     if (jumps == "") {
         return -1
     }
     var x = false
-    for (part in parts) {
+    for (result in parts) {
         var count = 0
-        for (char in part) {
+        for (char in result) {
             if (char in '0'..'9') {
                 count++
             } else {
@@ -301,26 +283,20 @@ fun bestHighJump(jumps: String): Int {
                 }
             }
         }
-        if (count == part.length) {
+        if (count == result.length) {
+            if (lastElement.toIntOrNull() != null) {
+                return -1
+            }
             x = true
-            if (part.toIntOrNull() != null) {
-                element = part.toInt()
+            if (result.toIntOrNull() != null) {
+                element = result.toInt()
             }
         }
-        if (part.contains("+") && x && element > max) {
+        if (result.contains("+") && x && element > max) {
             max = element
             x = false
         }
-    }
-    if (max == -1) {
-        for (char in parts.last()) {
-            if (char !in '0'..'9') {
-                return -1
-            }
-        }
-        if (parts.last().toInt() > max) {
-            max = parts.last().toInt()
-        }
+        lastElement = result
     }
     return max
 }
@@ -339,7 +315,7 @@ fun plusMinus(expression: String): Int {
     var sign = '+'
     var x = true
     val parts = expression.split(" ")
-    if (expression == "") {
+    if (expression == "" || parts[0] == "") {
         throw IllegalArgumentException()
     }
     var last = ""
@@ -369,7 +345,7 @@ fun plusMinus(expression: String): Int {
         }
         last = part
     }
-    if (last == "-" || last == "+" ) {
+    if (last == "-" || last == "+") {
         throw IllegalArgumentException()
     }
     return result
@@ -420,10 +396,7 @@ fun mostExpensive(description: String): String {
     val parts = description.split(";")
     for (part in parts) {
         val element = part.split(" ")
-        if (element.size != 2 && a == 1) {
-            return ""
-        }
-        if (element.size != 3 && a != 1) {
+        if ((element.size != 2 && a == 1 )|| (element.size != 3 && a != 1)) {
             return ""
         }
         val list = element.toMutableList()
