@@ -396,7 +396,7 @@ fun mostExpensive(description: String): String {
     val parts = description.split(";")
     for (part in parts) {
         val element = part.split(" ")
-        if ((element.size != 2 && a == 1 )|| (element.size != 3 && a != 1)) {
+        if ((element.size != 2 && a == 1) || (element.size != 3 && a != 1)) {
             return ""
         }
         val list = element.toMutableList()
