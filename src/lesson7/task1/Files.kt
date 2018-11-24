@@ -144,38 +144,24 @@ fun centerFile(inputName: String, outputName: String) {
             maxLength = string.length
         }
     }
-    var emptyString = ""
-    for (i in 0..maxLength) {
-        emptyString += " "
-    }
     File(outputName).bufferedWriter().use {
         for (string in text) {
-            val spaceLeft = (maxLength / 2) - string.length
-            val spaceRight = maxLength - spaceLeft - string.length
-            if (string.isNotEmpty()) {
-                var count = maxLength
-                if (string.length != maxLength) {
-                    for (word in string.split(" ")) {
-                        if (count == 0) {
-                            it.write(spaceLeft)
-                            it.write(word)
-                            count++
-                        } else {
-                            if (count == maxLength) {
-                                it.write(word)
-                                it.write(spaceRight)
-                                count++
-                            } else {
-                                it.write(word)
-                                it.write(" ")
-                                count++
-                            }
-                        }
-                    }
+            var spacesBefore = 0
+            for (char in string) {
+                if (char == ' ') {
+                    spacesBefore++
+                } else {
+                    break
                 }
-            } else {
-                it.write(emptyString)
             }
+            if (string.length != maxLength) {
+                var count = 0
+                do {
+                    it.write(" ")
+                    count++
+                } while (2 * count + string.length + 1 + spacesBefore < maxLength)
+            }
+            it.write(string)
             it.newLine()
         }
     }
@@ -282,13 +268,13 @@ fun top20Words(inputName: String): Map<String, Int> {
         for (word in string.split(" ")) {
             var cleanWord = ""
             for (char in word) {
-                if (char.toLowerCase().toInt() in 97..122 || char.toLowerCase().toInt() in 1072..1105) {
+                if (char.toLowerCase() in 'a'..'z' || char.toLowerCase() in 'а'..'ё') {
                     cleanWord += char.toLowerCase()
                 }
             }
             if (cleanWord.isNotEmpty()) {
                 if (cleanWord in result.keys) {
-                    result[cleanWord] = 1 + result[cleanWord]!!
+                    result[cleanWord] = result[cleanWord]!! + 1
                 } else {
                     result[cleanWord] = 1
                 }
