@@ -86,7 +86,7 @@ fun dateStrToDigit(str: String): String {
         result.append((parts[0].toInt()).toString() + '.')
     }
     if (parts[1] in month) {
-        if (month.indexOf(parts[1]) < 8) {
+        if (month.indexOf(parts[1]) < 9) {
             result.append('0')
         }
         result.append((month.indexOf(parts[1]) + 1).toString() + '.')
