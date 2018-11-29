@@ -80,7 +80,7 @@ fun dateStrToDigit(str: String): String {
     }
     val result = StringBuilder()
     if (parts[0].toIntOrNull() != null) {
-        if (parts[0].toInt() < 9) {
+        if (parts[0].toInt() <= 9) {
             result.append('0')
         }
         result.append((parts[0].toInt()).toString() + '.')
