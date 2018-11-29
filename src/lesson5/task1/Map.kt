@@ -2,9 +2,6 @@
 
 package lesson5.task1
 
-import lesson4.task1.factorize
-import kotlin.math.ceil
-import kotlin.math.floor
 
 /**
  * Пример
@@ -251,7 +248,7 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         if (friends[element] != null) {
             humans += friends[element]!!
         }
-        for (i in 0..(friends.size - 1)) {
+        for (i in 0..(((friends.size) / 2))) {
             var enough = true
             for ((key, value) in friends) {
                 if (key in humans && value.isNotEmpty()) {
@@ -357,16 +354,14 @@ fun extractRepeats(list: List<String>): Map<String, Int> {
  *   hasAnagrams(listOf("тор", "свет", "рот")) -> true
  */
 fun hasAnagrams(words: List<String>): Boolean {
-    val map = mutableMapOf<String, List<Char>>()
+    val letterSet = mutableSetOf<String>()
     for (element in words) {
-        val charList = element.toMutableList()
-        if (charList.toList().sorted() !in map.values) {
-            map.put(element, charList.toList().sorted())
+        if (element.toList().sorted().joinToString() !in letterSet) {
+            letterSet.add(element.toList().sorted().joinToString())
         } else {
             return true
         }
     }
-
     return false
 }
 
@@ -388,11 +383,11 @@ fun hasAnagrams(words: List<String>): Boolean {
  *   findSumOfTwo(listOf(1, 2, 3), 6) -> Pair(-1, -1)
  */
 fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
-    for (i in 0..(list.size - 2)) {
-        for (j in (i + 1)..(list.size - 1)) {
-            if (list[i] + list[j] == number) {
-                return i to j
-            }
+    val currentList = list.toMutableList()
+    for (i in 0..(list.size - 1)) {
+        currentList.remove(list[i])
+        if (number - list[i] in currentList) {
+            return i to ((list - list[i]).indexOf(number - list[i]) + 1)
         }
     }
     return Pair(-1, -1)
