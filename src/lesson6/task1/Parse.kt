@@ -83,7 +83,7 @@ fun dateStrToDigit(str: String): String {
         if (parts[0].toInt() < 9) {
             result.append('0')
         }
-        result.append(parts[0] + '.')
+        result.append((parts[0].toInt()).toString() + '.')
     }
     if (parts[1] in month) {
         if (month.indexOf(parts[1]) < 8) {
@@ -210,7 +210,7 @@ fun flattenPhoneNumber(phone: String): String {
             }
         }
     }
-    if (result.length > 1 && flag) {
+    if (result.isNotEmpty() && flag) {
         return result.toString()
     }
     return ""
