@@ -80,19 +80,16 @@ fun dateStrToDigit(str: String): String {
     }
     val result = StringBuilder()
     if (parts[0].toIntOrNull() != null) {
-        if (parts[0].toInt() > 9) {
-            result.append(parts[0] + '.')
-        } else {
-            val x = parts[0].toInt()
-            result.append('0' + "$x" + '.')
+        if (parts[0].toInt() < 9) {
+            result.append('0')
         }
+        result.append(parts[0] + '.')
     }
     if (parts[1] in month) {
-        if (month.indexOf(parts[1]) > 8) {
-            result.append((month.indexOf(parts[1]) + 1).toString() + '.')
-        } else {
-            result.append('0' + (month.indexOf(parts[1]) + 1).toString() + '.')
+        if (month.indexOf(parts[1]) < 8) {
+            result.append('0')
         }
+        result.append((month.indexOf(parts[1]) + 1).toString() + '.')
     } else {
         return ""
     }
@@ -271,14 +268,15 @@ fun bestHighJump(jumps: String): Int {
     if (jumps == "") {
         return -1
     }
-    var x = false
+    var firstNumber = false
+    var checkNumber = false
     for (result in parts) {
         var count = 0
         for (char in result) {
             if (char in '0'..'9') {
                 count++
             } else {
-                if (char !in s) {
+                if (char !in s || (char in s && !firstNumber)) {
                     return -1
                 }
             }
@@ -287,14 +285,15 @@ fun bestHighJump(jumps: String): Int {
             if (lastElement.toIntOrNull() != null) {
                 return -1
             }
-            x = true
+            checkNumber = true
             if (result.toIntOrNull() != null) {
                 element = result.toInt()
+                firstNumber = true
             }
         }
-        if (result.contains("+") && x && element > max) {
+        if (result.contains("+") && checkNumber && element > max) {
             max = element
-            x = false
+            checkNumber = false
         }
         lastElement = result
     }
@@ -400,23 +399,13 @@ fun mostExpensive(description: String): String {
             return ""
         }
         val list = element.toMutableList()
-        if (a == 1) {
-            if (list[1].toDouble() > max) {
-                if (list[1].toDoubleOrNull() == null) {
-                    return ""
-                }
-                max = list[1].toDouble()
-                x = list[0]
+        if (list[a].toDouble() > max) {
+            if (list[a].toDoubleOrNull() == null) {
+                return ""
             }
+            max = list[a].toDouble()
+            x = list[a - 1]
             a = 2
-        } else {
-            if (list[2].toDouble() > max) {
-                if (list[2].toDoubleOrNull() == null) {
-                    return ""
-                }
-                max = list[2].toDouble()
-                x = list[1]
-            }
         }
     }
     return x
