@@ -321,10 +321,10 @@ fun plusMinus(expression: String): Int {
     for (part in parts) {
         var count = 0
         for (char in part) {
-            if (char in '0'..'9' && x) {
+            if (char in '0'..'9' && x && part.toIntOrNull() != null) {
                 count++
             } else {
-                if ((char == '-' || char == '+') && !x) {
+                if ((char == '-' || char == '+') && !x && part.toIntOrNull() == null) {
                     sign = char
                     x = true
                 } else {
