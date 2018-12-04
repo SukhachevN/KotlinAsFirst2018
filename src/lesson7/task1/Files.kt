@@ -204,12 +204,10 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     }
     File(outputName).bufferedWriter().use {
         for (string in text) {
-            var currentLength = 0
             val words = mutableListOf<String>()
             for (word in string.split(" ")) {
                 if (word != "") {
                     words.add(word)
-                    currentLength += word.length
                 }
             }
             if (words.size == 1) {
@@ -224,17 +222,16 @@ fun alignFileByWidth(inputName: String, outputName: String) {
                                 if (flag) {
                                     flag = false
                                 } else {
-                                    if (currentLength < maxLength) {
-                                        words[i] = " " + words[i]
-                                    } else {
+                                    if (words.joinToString(separator = "").length == maxLength) {
                                         break
+                                    } else {
+                                        words[i] = " " + words[i]
                                     }
                                 }
                                 i++
-                                currentLength++
                             }
                         }
-                    } while (currentLength < maxLength)
+                    } while (words.joinToString(separator = "").length < maxLength)
                     it.write(words.joinToString(separator = ""))
                 }
             }
@@ -515,41 +512,61 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                 it.write("</p>")
                 it.write("<p>")
             }
-            var lastSymbol = ' '
             var i = false
             var b = false
             var s = false
-            for (char in string) {
-                if (char == '*' || char == '~') {
-                    if (char == '*' && lastSymbol == '*') {
-                        it.write("<b>")
-                        b = true
+            var bi = false
+            for (k in 0..(string.length - 2)) {
+                if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] == '*' && !b && !i) {
+                    if (!bi) {
+                        it.write("<b><i>")
+                        bi = true
+                    } else {
+                        it.write("</i></b>")
+                        bi = false
                     }
-                    if (char == '*' && (lastSymbol != '*' || b)) {
-                        it.write("<i>")
-                        i = true
-                    }
-                    if (char == '~' && lastSymbol == '~' && !s) {
+                }
+                if (string[k] != '~' && string[k] != '*') {
+                    it.write(string[k].toString())
+                }
+                if (string[k] == '~' && string[k + 1] == '~') {
+                    if (!s) {
                         it.write("<s>")
                         s = true
-                    }
-                    if (char == '*' && !i && b) {
-                        it.write("</b>")
-                        b = false
-                    }
-                    if (char == '*' && lastSymbol != '*' && i) {
-                        it.write("</i>")
-                        i = false
-                    }
-                    if (char == '~' && s && lastSymbol == '~') {
+                    } else {
                         it.write("</s>")
                         s = false
                     }
-                } else {
-                    it.write(char.toString())
                 }
-                lastSymbol = char
+                if (!bi) {
+                    if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] != '*') {
+                        if (!b) {
+                            it.write("<b>")
+                            b = true
+                        } else {
+                            it.write("</b>")
+                            b = false
+                        }
+                    }
+                    if (string[k] == '*' && string[k + 1] != '*' && string[k - 1] != '*') {
+                        if (!i) {
+                            it.write("<i>")
+                            i = true
+                        } else {
+                            it.write("</i>")
+                            i = false
+                        }
+                    }
+                }
             }
+            if (string.isNotEmpty()) {
+                if (string[string.length - 2] == '*') {
+                    if (i)
+                        it.write("</i>")
+                }
+                it.write(string[string.length - 1].toString())
+            }
+            it.newLine()
         }
         it.write("</p>")
         it.write("</body></html>")
