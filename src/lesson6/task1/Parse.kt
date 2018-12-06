@@ -262,40 +262,39 @@ fun bestLongJump(jumps: String): Int {
 fun bestHighJump(jumps: String): Int {
     var max = -1
     var element = -2
-    var lastElement = ""
     val parts = jumps.split(" ")
     val s = listOf('%', '-', '+')
     if (jumps == "") {
         return -1
     }
-    var firstNumber = false
     var checkNumber = false
-    for (result in parts) {
+    for (i in 0..(parts.size - 1)) {
+        if (i % 2 == 1 && parts[i].toIntOrNull() != null) {
+            return -1
+        }
         var count = 0
-        for (char in result) {
+        for (char in parts[i]) {
             if (char in '0'..'9') {
                 count++
+                if (parts[i].toIntOrNull() == null) {
+                    return -1
+                }
             } else {
-                if (char !in s || (char in s && !firstNumber)) {
+                if (char !in s) {
                     return -1
                 }
             }
         }
-        if (count == result.length) {
-            if (lastElement.toIntOrNull() != null) {
-                return -1
-            }
+        if (count == parts[i].length) {
             checkNumber = true
-            if (result.toIntOrNull() != null) {
-                element = result.toInt()
-                firstNumber = true
+            if (parts[i].toIntOrNull() != null) {
+                element = parts[i].toInt()
             }
         }
-        if (result.contains("+") && checkNumber && element > max) {
+        if (parts[i].contains("+") && checkNumber && element > max) {
             max = element
             checkNumber = false
         }
-        lastElement = result
     }
     return max
 }
@@ -399,10 +398,10 @@ fun mostExpensive(description: String): String {
             return ""
         }
         val list = element.toMutableList()
+        if (list[a].toDoubleOrNull() == null) {
+            return ""
+        }
         if (list[a].toDouble() > max) {
-            if (list[a].toDoubleOrNull() == null) {
-                return ""
-            }
             max = list[a].toDouble()
             x = list[a - 1]
             a = 2
