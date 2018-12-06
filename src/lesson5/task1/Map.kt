@@ -248,18 +248,13 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         if (friends[element] != null) {
             humans += friends[element]!!
         }
-        for (i in 0..(((friends.size) / 2))) {
-            var enough = true
+        for (i in 0..1) {
             for ((key, value) in friends) {
                 if (key in humans && value.isNotEmpty()) {
                     humans += value
-                    enough = false
                 }
             }
             result.put(element, humans - element)
-            if (enough) {
-                break
-            }
         }
     }
     return result
@@ -386,7 +381,7 @@ fun findSumOfTwo(list: List<Int>, number: Int): Pair<Int, Int> {
     val currentList = list.toMutableList()
     for (i in 0..(list.size - 1)) {
         currentList.remove(list[i])
-        if (number - list[i] in currentList) {
+        if (currentList - (number - list[i]) != currentList) {
             return i to ((list - list[i]).indexOf(number - list[i]) + 1)
         }
     }
