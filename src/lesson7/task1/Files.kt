@@ -198,8 +198,16 @@ fun alignFileByWidth(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     var maxLength = -1
     for (string in text) {
-        if (string.length > maxLength) {
-            maxLength = string.length
+        var count = 0
+        for (i in 0..(string.length - 1)) {
+            if (string[i] == ' ') {
+                count++
+            } else {
+                break
+            }
+        }
+        if (string.length - count > maxLength) {
+            maxLength = string.length - count
         }
     }
     File(outputName).bufferedWriter().use {
@@ -267,6 +275,15 @@ fun top20Words(inputName: String): Map<String, Int> {
             for (char in word) {
                 if (char.toLowerCase() in 'a'..'z' || char.toLowerCase() in 'а'..'ё') {
                     cleanWord += char.toLowerCase()
+                } else {
+                    if (cleanWord.isNotEmpty()) {
+                        if (cleanWord in result.keys) {
+                            result[cleanWord] = result[cleanWord]!! + 1
+                        } else {
+                            result[cleanWord] = 1
+                        }
+                    }
+                    cleanWord = ""
                 }
             }
             if (cleanWord.isNotEmpty()) {
