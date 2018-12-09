@@ -248,11 +248,14 @@ fun propagateHandshakes(friends: Map<String, Set<String>>): Map<String, Set<Stri
         if (friends[element] != null) {
             humans += friends[element]!!
         }
-        for (i in 0..1) {
+        for (i in 0..friends.size) {
             for ((key, value) in friends) {
                 if (key in humans && value.isNotEmpty()) {
                     humans += value
                 }
+            }
+            if (result[element] == humans - element) {
+                break
             }
             result.put(element, humans - element)
         }
