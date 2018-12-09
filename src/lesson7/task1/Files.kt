@@ -406,7 +406,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                     } else {
                         if (dictionary[char.toUpperCase()] != null) {
                             if (char == char.toLowerCase()) {
-                                it.write(dictionary[char.toUpperCase()]!!.toLowerCase())
+                                it.write((dictionary[char.toUpperCase()]!!).toLowerCase())
                             } else {
                                 it.write(dictionary[char.toUpperCase()])
                             }
