@@ -383,7 +383,6 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                             if (dictionary[char.toLowerCase()]!!.length == 1) {
                                 if (dictionary[char.toLowerCase()] == dictionary[char.toLowerCase()]!!.toUpperCase()) {
                                     it.write(dictionary[char.toLowerCase()])
-
                                 } else {
                                     it.write(dictionary[char.toLowerCase()]!!.toLowerCase())
                                 }
@@ -408,10 +407,30 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                             if (char == char.toLowerCase()) {
                                 it.write((dictionary[char.toUpperCase()]!!).toLowerCase())
                             } else {
-                                it.write(dictionary[char.toUpperCase()])
+                                if (dictionary[char.toUpperCase()]!!.length == 1) {
+                                    if (dictionary[char.toUpperCase()] == dictionary[char.toUpperCase()]!!.toUpperCase()) {
+                                        it.write(dictionary[char.toUpperCase()])
+                                    } else {
+                                        it.write(dictionary[char.toUpperCase()]!!.toLowerCase())
+                                    }
+                                } else {
+                                    var flag = true
+                                    if (char == char.toUpperCase()) {
+                                        for (sim in dictionary[char.toUpperCase()]!!) {
+                                            if (flag) {
+                                                it.write(sim.toUpperCase().toString())
+                                                flag = false
+                                            } else {
+                                                it.write(sim.toLowerCase().toString())
+                                            }
+                                        }
+                                    } else {
+                                        it.write(dictionary[char.toUpperCase()])
+                                    }
+                                }
                             }
                         } else {
-                            it.write(char.toInt())
+                            it.write(char.toString())
                         }
                     }
                 }
