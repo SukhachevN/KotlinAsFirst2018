@@ -162,13 +162,13 @@ fun centerFile(inputName: String, outputName: String) {
                     break
                 }
             }
-            if (string.length != maxLength) {
-                var count = 0
-                do {
+            var count = 0
+            do {
+                if (string.length != maxLength) {
                     it.write(" ")
                     count++
-                } while (2 * count + string.length + 1 + spacesBefore < maxLength)
-            }
+                } else break
+            } while (2 * count + string.length + 1 + spacesBefore < maxLength)
             it.write(string)
             it.newLine()
         }
