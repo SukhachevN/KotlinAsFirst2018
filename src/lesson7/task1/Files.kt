@@ -162,13 +162,21 @@ fun centerFile(inputName: String, outputName: String) {
                     break
                 }
             }
+            var spaceAfter = 0
+            for (i in (string.length - 1) downTo 0) {
+                if (string[i] == ' ') {
+                    spaceAfter++
+                } else {
+                    break
+                }
+            }
             var count = 0
             do {
-                if (string.length != maxLength) {
+                if (string.length - spaceAfter < maxLength) {
                     it.write(" ")
                     count++
                 } else break
-            } while (2 * count + string.length + 1 + spacesBefore < maxLength)
+            } while (2 * count + string.length + 1 + spacesBefore - spaceAfter < maxLength)
             it.write(string)
             it.newLine()
         }
@@ -384,10 +392,10 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                                 if (char == char.toUpperCase()) {
                                     for (sim in dictionary[char.toLowerCase()]!!) {
                                         if (flag) {
-                                            it.write(sim.toUpperCase().toInt())
+                                            it.write(sim.toUpperCase().toString())
                                             flag = false
                                         } else {
-                                            it.write(sim.toLowerCase().toInt())
+                                            it.write(sim.toLowerCase().toString())
                                         }
                                     }
                                 } else {
