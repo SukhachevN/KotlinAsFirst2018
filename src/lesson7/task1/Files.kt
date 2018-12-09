@@ -541,7 +541,7 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             var b = false
             var s = false
             var bi = false
-            for (k in 0..(string.length - 2)) {
+            for (k in 0..(string.length - 3)) {
                 if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] == '*' && !b && !i) {
                     if (!bi) {
                         it.write("<b><i>")
@@ -586,8 +586,12 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             }
             if (string.isNotEmpty()) {
                 if (string[string.length - 2] == '*') {
-                    if (i)
+                    if (i) {
                         it.write("</i>")
+                    }
+                } else {
+                    if (string[string.length - 2] != '~')
+                        it.write((string[string.length - 2].toString()))
                 }
                 it.write(string[string.length - 1].toString())
             }
