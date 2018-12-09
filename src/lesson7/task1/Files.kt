@@ -382,7 +382,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                         } else {
                             if (dictionary[char.toLowerCase()]!!.length == 1) {
                                 if (dictionary[char.toLowerCase()] == dictionary[char.toLowerCase()]!!.toUpperCase()) {
-                                    it.write(dictionary[char.toLowerCase()])
+                                    it.write(dictionary[char.toLowerCase()]!!.toUpperCase())
                                 } else {
                                     it.write(dictionary[char.toLowerCase()]!!.toLowerCase())
                                 }
@@ -409,7 +409,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                             } else {
                                 if (dictionary[char.toUpperCase()]!!.length == 1) {
                                     if (dictionary[char.toUpperCase()] == dictionary[char.toUpperCase()]!!.toUpperCase()) {
-                                        it.write(dictionary[char.toUpperCase()])
+                                        it.write(dictionary[char.toUpperCase()]!!.toUpperCase())
                                     } else {
                                         it.write(dictionary[char.toUpperCase()]!!.toLowerCase())
                                     }
