@@ -140,8 +140,16 @@ fun centerFile(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     var maxLength = -1
     for (string in text) {
-        if (string.length > maxLength) {
-            maxLength = string.length
+        var spaceAfter = 0
+        for (i in (string.length - 1) downTo 0) {
+            if (string[i] == ' ') {
+                spaceAfter++
+            } else {
+                break
+            }
+        }
+        if (string.length - spaceAfter > maxLength) {
+            maxLength = string.length - spaceAfter
         }
     }
     File(outputName).bufferedWriter().use {
@@ -399,10 +407,10 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
                         }
                     }
                 }
-            }
-            count--
-            if (count != 0) {
-                it.write(" ")
+                count--
+                if (count != 0) {
+                    it.write(" ")
+                }
             }
             it.newLine()
         }
