@@ -631,7 +631,9 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         it.write("</i>")
                     }
                 } else {
-                    it.write(string)
+                    if (string.isNotEmpty()) {
+                        it.write(string)
+                    }
                 }
             }
             it.newLine()
