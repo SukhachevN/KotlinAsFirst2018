@@ -568,50 +568,50 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             var b = false
             var s = false
             var bi = false
-            for (k in 0..(string.length - 3)) {
-                if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] == '*' && !b && !i) {
+            if (string.length > 3) {
+                for (k in 0..(string.length - 3)) {
+                    if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] == '*' && !b && !i) {
+                        if (!bi) {
+                            it.write("<b><i>")
+                            bi = true
+                        } else {
+                            it.write("</i></b>")
+                            bi = false
+                        }
+                    }
+                    if (string[k] != '~' && string[k] != '*') {
+                        it.write(string[k].toString())
+                    }
+                    if (string[k] == '~' && string[k + 1] == '~') {
+                        if (!s) {
+                            it.write("<s>")
+                            s = true
+                        } else {
+                            it.write("</s>")
+                            s = false
+                        }
+                    }
                     if (!bi) {
-                        it.write("<b><i>")
-                        bi = true
-                    } else {
-                        it.write("</i></b>")
-                        bi = false
-                    }
-                }
-                if (string[k] != '~' && string[k] != '*') {
-                    it.write(string[k].toString())
-                }
-                if (string[k] == '~' && string[k + 1] == '~') {
-                    if (!s) {
-                        it.write("<s>")
-                        s = true
-                    } else {
-                        it.write("</s>")
-                        s = false
-                    }
-                }
-                if (!bi) {
-                    if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] != '*') {
-                        if (!b) {
-                            it.write("<b>")
-                            b = true
-                        } else {
-                            it.write("</b>")
-                            b = false
+                        if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] != '*') {
+                            if (!b) {
+                                it.write("<b>")
+                                b = true
+                            } else {
+                                it.write("</b>")
+                                b = false
+                            }
                         }
-                    }
-                    if (string[k] == '*' && string[k + 1] != '*' && string[k - 1] != '*') {
-                        if (!i) {
-                            it.write("<i>")
-                            i = true
-                        } else {
-                            it.write("</i>")
-                            i = false
+                        if (string[k] == '*' && string[k + 1] != '*' && string[k - 1] != '*') {
+                            if (!i) {
+                                it.write("<i>")
+                                i = true
+                            } else {
+                                it.write("</i>")
+                                i = false
+                            }
                         }
                     }
                 }
-            }
-            if (string.isNotEmpty()) {
                 if (string[string.length - 2] == '*') {
                     if (i) {
                         it.write("</i>")
@@ -621,6 +621,18 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
                         it.write((string[string.length - 2].toString()))
                 }
                 it.write(string[string.length - 1].toString())
+            } else {
+                if (string.length >= 2) {
+                    if (string[0] == '*' && string[string.length - 1] == '*') {
+                        it.write("<i>")
+                        if (string.length == 3) {
+                            it.write(string[1].toString())
+                        }
+                        it.write("</i>")
+                    }
+                } else {
+                    it.write(string)
+                }
             }
             it.newLine()
         }
