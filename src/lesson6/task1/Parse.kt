@@ -263,7 +263,7 @@ fun bestHighJump(jumps: String): Int {
     var max = -1
     var element = -2
     val parts = jumps.split(" ")
-    val s = listOf('%', '-', '+')
+    val s = setOf('%', '-', '+')
     if (jumps == "") {
         return -1
     }
