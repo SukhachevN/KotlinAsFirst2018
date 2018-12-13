@@ -264,12 +264,12 @@ fun bestHighJump(jumps: String): Int {
     var element = -2
     val parts = jumps.split(" ")
     val s = setOf('%', '-', '+')
-    if (jumps == "") {
+    if (parts.size % 2 != 0) {
         return -1
     }
     var checkNumber = false
     for (i in 0..(parts.size - 1)) {
-        if (i % 2 == 1 && parts[i].toIntOrNull() != null) {
+        if (i % 2 == 0 && parts[i].toIntOrNull() == null) {
             return -1
         }
         var count = 0
