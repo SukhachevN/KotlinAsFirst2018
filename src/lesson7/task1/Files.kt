@@ -559,15 +559,15 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
     File(outputName).bufferedWriter().use {
         it.write("<html><body>")
         it.write("<p>")
+        var i = false
+        var b = false
+        var s = false
+        var bi = false
         for (string in text) {
             if (string.isEmpty()) {
                 it.write("</p>")
                 it.write("<p>")
             }
-            var i = false
-            var b = false
-            var s = false
-            var bi = false
             if (string.length > 3) {
                 for (k in 0..(string.length - 3)) {
                     if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] == '*' && !b && !i) {
