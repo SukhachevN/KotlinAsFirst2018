@@ -57,20 +57,9 @@ fun alignFile(inputName: String, lineLength: Int, outputName: String) {
  */
 fun countSubstrings(inputName: String, substrings: List<String>): Map<String, Int> {
     val result = mutableMapOf<String, Int>()
-    val text = File(inputName).readLines()
+    val text = File(inputName).readText().toLowerCase()
     for (element in substrings) {
-        var count = 0
-        for (string in text) {
-            if (element.toLowerCase() in string.toLowerCase()) {
-                val parts = string.toLowerCase().split(element.toLowerCase())
-                if (parts.size > 1) {
-                    count += parts.size - 1
-                } else {
-                    count++
-                }
-            }
-        }
-        result[element] = count
+        result.put(element, Regex(element.toLowerCase()).findAll(text).toList().size)
     }
     return result
 }
@@ -92,18 +81,17 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
 fun sibilants(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     File(outputName).bufferedWriter().use {
-        val letters1 = listOf('Ж', 'Ч', 'Ш', 'Щ')
-        val lettersTrue = listOf('И', 'А', 'У', 'и', 'а', 'у')
-        val lettersFalse = listOf('Ы', 'Я', 'Ю', 'ы', 'я', 'ю')
+        val letters = listOf('Ж', 'Ч', 'Ш', 'Щ')
+        val lettersForReplace = mapOf<Char, Char>('Ы' to 'И', 'Я' to 'А', 'Ю' to 'У',
+                'ы' to 'и', 'я' to 'а', 'ю' to 'у')
         for (string in text) {
             var count = string.split(" ").size
             for (word in string.split(" ")) {
                 var lastLetter = ' '
-                var letter: Char
                 for (char in word) {
-                    letter = char
-                    if (letter in lettersFalse && lastLetter in letters1) {
-                        it.write(lettersTrue[lettersFalse.indexOf(char)].toInt())
+                    val letter = char
+                    if (letter in lettersForReplace.keys && lastLetter in letters) {
+                        it.write(lettersForReplace[letter]!!.toInt())
                     } else {
                         it.write(char.toInt())
                     }
@@ -140,44 +128,22 @@ fun centerFile(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     var maxLength = -1
     for (string in text) {
-        var spaceAfter = 0
-        for (i in (string.length - 1) downTo 0) {
-            if (string[i] == ' ') {
-                spaceAfter++
-            } else {
-                break
-            }
-        }
-        if (string.length - spaceAfter > maxLength) {
-            maxLength = string.length - spaceAfter
+        val spaces = 2 * string.length - string.trimEnd(' ').length - string.trimStart(' ').length
+        if (string.length - spaces > maxLength) {
+            maxLength = string.length - spaces
         }
     }
     File(outputName).bufferedWriter().use {
         for (string in text) {
-            var spacesBefore = 0
-            for (char in string) {
-                if (char == ' ') {
-                    spacesBefore++
-                } else {
-                    break
-                }
-            }
-            var spaceAfter = 0
-            for (i in (string.length - 1) downTo 0) {
-                if (string[i] == ' ') {
-                    spaceAfter++
-                } else {
-                    break
-                }
-            }
+            val spaces = 2 * string.length - string.trimStart(' ').length - string.trimEnd(' ').length
             var count = 0
-            do {
-                if (string.length - spaceAfter < maxLength) {
+            if (string.length - spaces < maxLength) {
+                do {
                     it.write(" ")
                     count++
-                } else break
-            } while (2 * count + string.length + 1 + spacesBefore - spaceAfter < maxLength)
-            it.write(string)
+                } while (2 * count + string.length + 1 - spaces < maxLength)
+            }
+            it.write(string.trimStart(' ').trimEnd(' '))
             it.newLine()
         }
     }
@@ -287,51 +253,31 @@ fun top20Words(inputName: String): Map<String, Int> {
     val text = File(inputName).readLines()
     for (string in text) {
         for (word in string.split(" ")) {
-            var cleanWord = ""
+            var cleanWord = StringBuilder()
             for (char in word) {
                 if (char.toLowerCase() in 'a'..'z' || char.toLowerCase() in 'а'..'ё') {
-                    cleanWord += char.toLowerCase()
+                    cleanWord.append(char.toLowerCase())
                 } else {
                     if (cleanWord.isNotEmpty()) {
-                        if (cleanWord in result.keys) {
-                            result[cleanWord] = result[cleanWord]!! + 1
+                        if (cleanWord.toString() in result.keys) {
+                            result[cleanWord.toString()] = result[cleanWord.toString()]!! + 1
                         } else {
-                            result[cleanWord] = 1
+                            result[cleanWord.toString()] = 1
                         }
                     }
-                    cleanWord = ""
+                    cleanWord = StringBuilder()
                 }
             }
             if (cleanWord.isNotEmpty()) {
-                if (cleanWord in result.keys) {
-                    result[cleanWord] = result[cleanWord]!! + 1
+                if (cleanWord.toString() in result.keys) {
+                    result[cleanWord.toString()] = result[cleanWord.toString()]!! + 1
                 } else {
-                    result[cleanWord] = 1
+                    result[cleanWord.toString()] = 1
                 }
             }
         }
     }
-    if (result.size > 20) {
-        var max: Int
-        var maxName: String
-        val map = mutableMapOf<String, Int>()
-        var count = 0
-        do {
-            max = Int.MIN_VALUE
-            maxName = ""
-            for ((key, value) in result) {
-                if (value > max) {
-                    max = value
-                    maxName = key
-                }
-            }
-            map.put(maxName, max)
-            result.remove(maxName)
-            count++
-        } while (count < 20)
-        return map
-    }
-    return result
+    return if (result.size > 20) result.toList().sortedByDescending { it.second }.subList(0, 20).toMap() else result
 }
 
 /**
@@ -371,73 +317,22 @@ fun top20Words(inputName: String): Map<String, Int> {
  */
 fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: String) {
     val text = File(inputName).readLines()
+    val rightDictionary = mutableMapOf<Char, String>()
+    for ((key, value) in dictionary) {
+        rightDictionary.put(key.toLowerCase(), value.toLowerCase())
+        rightDictionary.put(key.toUpperCase(), value.toLowerCase().capitalize())
+    }
     File(outputName).bufferedWriter().use {
         for (string in text) {
             var count = string.split(" ").size
             for (word in string.split(" ")) {
                 for (char in word) {
-                    if (dictionary[char.toLowerCase()] != null) {
-                        if (char == char.toLowerCase()) {
-                            it.write(dictionary[char.toLowerCase()]!!.toLowerCase())
-                        } else {
-                            if (dictionary[char.toLowerCase()]!!.length == 1) {
-                                if (dictionary[char.toLowerCase()] == dictionary[char.toLowerCase()]!!.toUpperCase()) {
-                                    it.write(dictionary[char.toLowerCase()]!!.toUpperCase())
-                                } else {
-                                    it.write(dictionary[char.toLowerCase()]!!.toLowerCase())
-                                }
-                            } else {
-                                var flag = true
-                                if (char == char.toUpperCase()) {
-                                    for (sim in dictionary[char.toLowerCase()]!!) {
-                                        if (flag) {
-                                            it.write(sim.toUpperCase().toString())
-                                            flag = false
-                                        } else {
-                                            it.write(sim.toLowerCase().toString())
-                                        }
-                                    }
-                                } else {
-                                    it.write(dictionary[char.toLowerCase()])
-                                }
-                            }
-                        }
-                    } else {
-                        if (dictionary[char.toUpperCase()] != null) {
-                            if (char == char.toLowerCase()) {
-                                it.write((dictionary[char.toUpperCase()]!!).toLowerCase())
-                            } else {
-                                if (dictionary[char.toUpperCase()]!!.length == 1) {
-                                    if (dictionary[char.toUpperCase()] == dictionary[char.toUpperCase()]!!.toUpperCase()) {
-                                        it.write(dictionary[char.toUpperCase()]!!.toUpperCase())
-                                    } else {
-                                        it.write(dictionary[char.toUpperCase()]!!.toLowerCase())
-                                    }
-                                } else {
-                                    var flag = true
-                                    if (char == char.toUpperCase()) {
-                                        for (sim in dictionary[char.toUpperCase()]!!) {
-                                            if (flag) {
-                                                it.write(sim.toUpperCase().toString())
-                                                flag = false
-                                            } else {
-                                                it.write(sim.toLowerCase().toString())
-                                            }
-                                        }
-                                    } else {
-                                        it.write(dictionary[char.toUpperCase()])
-                                    }
-                                }
-                            }
-                        } else {
-                            it.write(char.toString())
-                        }
-                    }
+                    it.write(rightDictionary.getOrDefault(char, char.toString()))
                 }
-                count--
-                if (count != 0) {
-                    it.write(" ")
-                }
+            }
+            count--
+            if (count != 0) {
+                it.write(" ")
             }
             it.newLine()
         }
@@ -474,15 +369,7 @@ fun chooseLongestChaoticWord(inputName: String, outputName: String) {
     var count = 0
     var maxLength = -1
     for (string in text) {
-        var flag = true
-        val letters = mutableSetOf<Char>()
-        for (char in string) {
-            if (char.toLowerCase() !in letters) {
-                letters.add(char.toLowerCase())
-            } else {
-                flag = false
-            }
-        }
+        val flag = string.toLowerCase().toSet().size == string.length
         if (flag) {
             if (string !in list) {
                 list.add(string)
@@ -779,7 +666,7 @@ fun markdownToHtml(inputName: String, outputName: String) {
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     val space = mutableListOf<String>()
-    var line = ""
+    val line = StringBuilder()
     var count = 1
     val digitList = rhv.toString().toMutableList()
     val valueList = mutableListOf<Int>()
@@ -790,8 +677,8 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     for (i in 0..(digitNumber(lhv) - digitNumber(rhv) + spaceBefore.length - 2)) {
         space.add(" ")
     }
-    for (i in 0..((digitNumber(rhv)) - 1 + digitNumber(lhv))) {
-        line += "-"
+    for (i in 0..(digitNumber(lhv * rhv))) {
+        line.append("-")
     }
     File(outputName).bufferedWriter().use {
         it.write(spaceBefore.toString())
@@ -801,10 +688,10 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.write(space.joinToString(separator = ""))
         it.write("$rhv")
         it.newLine()
-        it.write(line)
+        it.write(line.toString())
         it.newLine()
         for (i in 0..(digitNumber(rhv) - 1)) {
-            val value = lhv * (digitList.last().toInt() - 48)
+            val value = lhv * (digitList.last() - '0')
             valueList += value * count
             if (i != 0) {
                 it.write("+")
@@ -824,7 +711,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             count *= 10
             digitList.remove(digitList.last())
         }
-        it.write(line)
+        it.write(line.toString())
         it.newLine()
         val result = valueList.sum()
         it.write(" $result")
