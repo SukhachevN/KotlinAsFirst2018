@@ -689,7 +689,6 @@ fun markdownToHtml(inputName: String, outputName: String) {
  *
  */
 fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
-    val space = mutableListOf<String>()
     val line = StringBuilder()
     var count = 1
     val digitList = rhv.toString().toMutableList()
@@ -698,9 +697,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     for (i in 0..((digitNumber(rhv)) - 1)) {
         spaceBefore.append(" ")
     }
-    for (i in 0..(digitNumber(lhv) - digitNumber(rhv) + spaceBefore.length - 2)) {
-        space.add(" ")
-    }
+    val space = spaceBefore.toMutableList()
     for (i in 0..(digitNumber(lhv * rhv))) {
         line.append("-")
     }
@@ -709,7 +706,10 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.write("$lhv")
         it.newLine()
         it.write("*")
-        it.write(space.joinToString(separator = ""))
+        for(i in 2..((digitNumber(lhv)) - digitNumber(rhv))){
+            it.write(" ")
+        }
+        it.write(spaceBefore.toString())
         it.write("$rhv")
         it.newLine()
         it.write(line.toString())
