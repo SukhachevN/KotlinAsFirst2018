@@ -320,16 +320,17 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     val rightDictionary = mutableMapOf<Char, String>()
     for ((key, value) in dictionary) {
         rightDictionary.put(key.toLowerCase(), value.toLowerCase())
-        if (key.toUpperCase() != key.toLowerCase()) {
-            rightDictionary.put(key.toUpperCase(), value.toLowerCase().capitalize())
-        }
     }
     File(outputName).bufferedWriter().use {
         for (string in text) {
             var count = string.split(" ").size
             for (word in string.split(" ")) {
                 for (char in word) {
-                    it.write(rightDictionary.getOrDefault(char, char.toString()))
+                    if (char == char.toLowerCase()) {
+                        it.write(rightDictionary.getOrDefault(char, char.toString()))
+                    } else {
+                        it.write(rightDictionary.getOrDefault(char.toLowerCase(), char.toString()).capitalize())
+                    }
                 }
                 count--
                 if (count != 0) {
@@ -458,7 +459,7 @@ fun check(string: String, i: Boolean, b: Boolean, s: Boolean, bi: Boolean, k: In
             message = "<s>"
             indicator = true
         } else {
-            message ="</s>"
+            message = "</s>"
             indicator = false
         }
     }
@@ -720,7 +721,9 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             valueList += value * count
             if (i != 0) {
                 it.write("+")
-                space.remove(space.first())
+                if (space.isNotEmpty()) {
+                    space.remove(space.first())
+                }
                 if (digitList.size != 1 && space.isNotEmpty()) {
                     it.write((space - " ").joinToString(separator = ""))
                 }
