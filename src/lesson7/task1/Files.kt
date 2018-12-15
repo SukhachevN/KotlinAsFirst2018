@@ -320,7 +320,7 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     val rightDictionary = mutableMapOf<Char, String>()
     for ((key, value) in dictionary) {
         rightDictionary.put(key.toLowerCase(), value.toLowerCase())
-        if (key.toUpperCase() !in rightDictionary.keys) {
+        if (key.toUpperCase() != key.toLowerCase()) {
             rightDictionary.put(key.toUpperCase(), value.toLowerCase().capitalize())
         }
     }
@@ -441,6 +441,51 @@ Suspendisse <s>et elit in enim tempus iaculis</s>.
  *
  * (Отступы и переносы строк в примере добавлены для наглядности, при решении задачи их реализовывать не обязательно)
  */
+fun check(string: String, i: Boolean, b: Boolean, s: Boolean, bi: Boolean, k: Int): Pair<String, Boolean> {
+    var message = ""
+    var indicator = true
+    if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] == '*' && !b && !i) {
+        if (!bi) {
+            message = "<b><i>"
+            indicator = true
+        } else {
+            message = "</i></b>"
+            indicator = false
+        }
+    }
+    if (string[k] == '~' && string[k + 1] == '~') {
+        if (!s) {
+            message = "<s>"
+            indicator = true
+        } else {
+            message ="</s>"
+            indicator = false
+        }
+    }
+    if (!bi) {
+        if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] != '*') {
+            if (!b) {
+                message = "<b>"
+                indicator = true
+            } else {
+                message = "</b>"
+                indicator = false
+            }
+        }
+        if (string[k] == '*' && string[k + 1] != '*' && string[k - 1] != '*') {
+            if (!i) {
+                message = "<i>"
+                indicator = true
+            } else {
+                message = "</i>"
+                indicator = false
+            }
+        }
+    }
+    return Pair(message, indicator)
+}
+
+
 fun markdownToHtmlSimple(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     File(outputName).bufferedWriter().use {
@@ -458,44 +503,24 @@ fun markdownToHtmlSimple(inputName: String, outputName: String) {
             if (string.length > 3) {
                 for (k in 0..(string.length - 3)) {
                     if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] == '*' && !b && !i) {
-                        if (!bi) {
-                            it.write("<b><i>")
-                            bi = true
-                        } else {
-                            it.write("</i></b>")
-                            bi = false
-                        }
+                        it.write(check(string, i, b, s, bi, k).first)
+                        bi = check(string, i, b, s, bi, k).second
                     }
                     if (string[k] != '~' && string[k] != '*') {
                         it.write(string[k].toString())
                     }
                     if (string[k] == '~' && string[k + 1] == '~') {
-                        if (!s) {
-                            it.write("<s>")
-                            s = true
-                        } else {
-                            it.write("</s>")
-                            s = false
-                        }
+                        it.write(check(string, i, b, s, bi, k).first)
+                        s = check(string, i, b, s, bi, k).second
                     }
                     if (!bi) {
                         if (string[k] == '*' && string[k + 1] == '*' && string[k + 2] != '*') {
-                            if (!b) {
-                                it.write("<b>")
-                                b = true
-                            } else {
-                                it.write("</b>")
-                                b = false
-                            }
+                            it.write(check(string, i, b, s, bi, k).first)
+                            b = check(string, i, b, s, bi, k).second
                         }
                         if (string[k] == '*' && string[k + 1] != '*' && string[k - 1] != '*') {
-                            if (!i) {
-                                it.write("<i>")
-                                i = true
-                            } else {
-                                it.write("</i>")
-                                i = false
-                            }
+                            it.write(check(string, i, b, s, bi, k).first)
+                            i = check(string, i, b, s, bi, k).second
                         }
                     }
                 }
@@ -696,7 +721,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             if (i != 0) {
                 it.write("+")
                 space.remove(space.first())
-                if (digitList.size != 1) {
+                if (digitList.size != 1 && space.isNotEmpty()) {
                     it.write((space - " ").joinToString(separator = ""))
                 }
                 it.write("$value")
