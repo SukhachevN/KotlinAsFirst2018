@@ -128,20 +128,18 @@ fun centerFile(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     var maxLength = -1
     for (string in text) {
-        val spaces = 2 * string.length - string.trimEnd(' ').length - string.trimStart(' ').length
-        if (string.length - spaces > maxLength) {
-            maxLength = string.length - spaces
+        if (string.trimEnd(' ').trimStart(' ').length > maxLength) {
+            maxLength = string.trimEnd(' ').trimStart(' ').length
         }
     }
     File(outputName).bufferedWriter().use {
         for (string in text) {
-            val spaces = 2 * string.length - string.trimStart(' ').length - string.trimEnd(' ').length
             var count = 0
-            if (string.length - spaces < maxLength) {
+            if (string.trimEnd(' ').trimStart(' ').length < maxLength) {
                 do {
                     it.write(" ")
                     count++
-                } while (2 * count + string.length + 1 - spaces < maxLength)
+                } while (2 * count + string.trimEnd(' ').trimStart(' ').length + 1 < maxLength)
             }
             it.write(string.trimStart(' ').trimEnd(' '))
             it.newLine()
