@@ -59,7 +59,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val result = mutableMapOf<String, Int>()
     val text = File(inputName).readText().toLowerCase()
     for (element in substrings) {
-        result.put(element, Regex(element.toLowerCase()).findAll(text).toList().size)
+        result[element] = Regex(element.toLowerCase()).findAll(text).toList().size
     }
     return result
 }
@@ -320,7 +320,9 @@ fun transliterate(inputName: String, dictionary: Map<Char, String>, outputName: 
     val rightDictionary = mutableMapOf<Char, String>()
     for ((key, value) in dictionary) {
         rightDictionary.put(key.toLowerCase(), value.toLowerCase())
-        rightDictionary.put(key.toUpperCase(), value.toLowerCase().capitalize())
+        if (key.toUpperCase() !in rightDictionary.keys) {
+            rightDictionary.put(key.toUpperCase(), value.toLowerCase().capitalize())
+        }
     }
     File(outputName).bufferedWriter().use {
         for (string in text) {
@@ -707,7 +709,9 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             }
             it.newLine()
             count *= 10
-            digitList.remove(digitList.last())
+            if (digitList.isNotEmpty()) {
+                digitList.remove(digitList.last())
+            }
         }
         it.write(line.toString())
         it.newLine()
