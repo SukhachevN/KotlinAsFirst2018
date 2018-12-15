@@ -128,7 +128,7 @@ fun centerFile(inputName: String, outputName: String) {
     val text = File(inputName).readLines()
     var maxLength = -1
     for (string in text) {
-        if (string.trimEnd(' ').trimStart(' ').length > maxLength) {
+        if (string.trimEnd(' ').trimStart(' ').length >= maxLength) {
             maxLength = string.trimEnd(' ').trimStart(' ').length
         }
     }
@@ -706,10 +706,12 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.write("$lhv")
         it.newLine()
         it.write("*")
-        for(i in 2..((digitNumber(lhv)) - digitNumber(rhv))){
-            it.write(" ")
+        if (digitNumber(rhv) != spaceBefore.length + digitNumber(lhv)) {
+            for (i in 2..((digitNumber(lhv)) - digitNumber(rhv))) {
+                it.write(" ")
+            }
+            it.write(spaceBefore.toString())
         }
-        it.write(spaceBefore.toString())
         it.write("$rhv")
         it.newLine()
         it.write(line.toString())
