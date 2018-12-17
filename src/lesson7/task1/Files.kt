@@ -4,6 +4,7 @@ package lesson7.task1
 
 import lesson3.task1.digitNumber
 import java.io.File
+import kotlin.math.max
 
 
 /**
@@ -689,10 +690,9 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     val digitList = rhv.toString().toMutableList()
     val valueList = mutableListOf<Int>()
     val spaceBefore = StringBuilder()
-    for (i in 0..((digitNumber(rhv)) - 1)) {
+    for (i in 0..(digitNumber(rhv * lhv)) - digitNumber(max(rhv, lhv))) {
         spaceBefore.append(" ")
     }
-    val space = spaceBefore.toMutableList()
     for (i in 0..(digitNumber(lhv * rhv))) {
         line.append("-")
     }
@@ -716,19 +716,11 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             valueList += value * count
             if (i != 0) {
                 it.write("+")
-                if (space.isNotEmpty()) {
-                    space.remove(space.first())
-                }
-                if (digitList.size != 1 && space.isNotEmpty()) {
-                    it.write((space - " ").joinToString(separator = ""))
-                }
+                for (k in 1..(digitNumber(rhv * lhv) - digitNumber(value) - i)) it.write(" ")
                 it.write("$value")
             } else {
-                it.write(spaceBefore.toString())
+                for (k in 0..(digitNumber(rhv * lhv) - digitNumber(value))) it.write(" ")
                 it.write("$value")
-            }
-            if (space.isNotEmpty()) {
-                space.remove(space.first())
             }
             it.newLine()
             count *= 10
