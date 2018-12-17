@@ -60,7 +60,7 @@ fun countSubstrings(inputName: String, substrings: List<String>): Map<String, In
     val result = mutableMapOf<String, Int>()
     val text = File(inputName).readText().toLowerCase()
     for (element in substrings) {
-        result[element] = Regex(element.toLowerCase()).findAll(text).toList().size
+        result[element] = Regex(element.toLowerCase()).findAll(text.toLowerCase()).toList().size
     }
     return result
 }
@@ -690,6 +690,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     val digitList = rhv.toString().toMutableList()
     val valueList = mutableListOf<Int>()
     val spaceBefore = StringBuilder()
+    val sum = digitNumber(rhv) + digitNumber(lhv)
     for (i in 0..(digitNumber(rhv * lhv)) - digitNumber(max(rhv, lhv))) {
         spaceBefore.append(" ")
     }
@@ -712,14 +713,14 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.write(line.toString())
         it.newLine()
         for (i in 0..(digitNumber(rhv) - 1)) {
-            val value = lhv * (digitList.last() - '0')
+            val value = lhv * (digitList.last().toInt() - '0'.toInt())
             valueList += value * count
             if (i != 0) {
                 it.write("+")
-                for (k in 1..(digitNumber(rhv * lhv) - digitNumber(value) - i)) it.write(" ")
+                for (k in 2..(sum - digitNumber(value) - i)) it.write(" ")
                 it.write("$value")
             } else {
-                for (k in 0..(digitNumber(rhv * lhv) - digitNumber(value))) it.write(" ")
+                for (k in 1..(sum - digitNumber(value))) it.write(" ")
                 it.write("$value")
             }
             it.newLine()
