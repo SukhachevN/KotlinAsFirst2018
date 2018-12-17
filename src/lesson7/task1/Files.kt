@@ -702,11 +702,8 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.write("$lhv")
         it.newLine()
         it.write("*")
-        if (digitNumber(rhv) != spaceBefore.length + digitNumber(lhv)) {
-            for (i in 2..((digitNumber(lhv)) - digitNumber(rhv))) {
-                it.write(" ")
-            }
-            it.write(spaceBefore.toString())
+        for (i in 1..((digitNumber(lhv * rhv)) - digitNumber(rhv))) {
+            it.write(" ")
         }
         it.write("$rhv")
         it.newLine()
