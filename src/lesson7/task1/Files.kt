@@ -709,12 +709,12 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.newLine()
         it.write(line.toString())
         it.newLine()
-        for (i in 0..(digitNumber(rhv) - 1)) {
+        for (i in 1..(digitNumber(rhv))) {
             val value = lhv * (digitList.last().toInt() - '0'.toInt())
             valueList += value * count
-            if (i != 0) {
+            if (i != 1) {
                 it.write("+")
-                for (k in 2..(sum - digitNumber(value) - i)) it.write(" ")
+                for (k in 1..(sum - digitNumber(value) - i)) it.write(" ")
                 it.write("$value")
             } else {
                 for (k in 1..(sum - digitNumber(value))) it.write(" ")
