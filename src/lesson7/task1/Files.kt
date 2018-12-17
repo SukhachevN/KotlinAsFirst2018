@@ -691,7 +691,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
     val valueList = mutableListOf<Int>()
     val spaceBefore = StringBuilder()
     val sum = digitNumber(rhv) + digitNumber(lhv)
-    for (i in 0..(digitNumber(rhv * lhv)) - digitNumber(max(rhv, lhv))) {
+    for (i in 0..(digitNumber(rhv * lhv)) - digitNumber(lhv)) {
         spaceBefore.append(" ")
     }
     for (i in 0..(digitNumber(lhv * rhv))) {
