@@ -711,6 +711,7 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
         it.newLine()
         for (i in 1..(digitNumber(rhv))) {
             val value = lhv * (digitList.last().toInt() - '0'.toInt())
+            digitList.remove(digitList.last())
             valueList += value * count
             if (i != 1) {
                 it.write("+")
@@ -722,9 +723,6 @@ fun printMultiplicationProcess(lhv: Int, rhv: Int, outputName: String) {
             }
             it.newLine()
             count *= 10
-            if (digitList.isNotEmpty()) {
-                digitList.remove(digitList.last())
-            }
         }
         it.write(line.toString())
         it.newLine()
